@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/assert/yaml"
+	"gopkg.in/yaml.v3"
 	"github.com/stretchr/testify/require"
 	"github.com/winebarrel/json2go"
 )
