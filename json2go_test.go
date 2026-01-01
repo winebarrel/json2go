@@ -30,6 +30,11 @@ func TestJsonToGo_Empty(t *testing.T) {
 	}
 }
 
+func TestJsonToGo_Err(t *testing.T) {
+	_, err := json2go.JsonToGo([]byte("invalid"), &json2go.Options{})
+	require.ErrorContains(t, err, "failed to parse json:")
+}
+
 type testCase struct {
 	Name     string
 	Input    string
