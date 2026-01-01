@@ -1,0 +1,153 @@
+- name: object 1
+  input: |
+    {
+      "glossary": {
+        "title": "example glossary",
+        "GlossDiv": {
+          "title": "S",
+          "GlossList": {
+            "GlossEntry": {
+              "ID": "SGML",
+              "SortAs": "SGML",
+              "GlossTerm": "Standard Generalized Markup Language",
+              "Acronym": "SGML",
+              "Abbrev": "ISO 8879:1986",
+              "GlossDef": {
+                "para": "A meta-markup language, used to create markup languages such as DocBook.",
+                "GlossSeeAlso": [
+                  "GML",
+                  "XML"
+                ]
+              },
+              "GlossSee": "markup"
+            }
+          }
+        }
+      }
+    }
+  expected: |
+    struct {
+    	Glossary struct {
+    		GlossDiv struct {
+    			GlossList struct {
+    				GlossEntry struct {
+    					Abbrev   string `json:"Abbrev"`
+    					Acronym  string `json:"Acronym"`
+    					GlossDef struct {
+    						GlossSeeAlso []string `json:"GlossSeeAlso"`
+    						Para         string   `json:"para"`
+    					} `json:"GlossDef"`
+    					GlossSee  string `json:"GlossSee"`
+    					GlossTerm string `json:"GlossTerm"`
+    					ID        string `json:"ID"`
+    					SortAs    string `json:"SortAs"`
+    				} `json:"GlossEntry"`
+    			} `json:"GlossList"`
+    			Title string `json:"title"`
+    		} `json:"GlossDiv"`
+    		Title string `json:"title"`
+    	} `json:"glossary"`
+    }
+- name: object 2
+  input: |
+    {
+      "Actors": [
+        {
+          "name": "Tom Cruise",
+          "age": 56,
+          "Born At": "Syracuse, NY",
+          "Birthdate": "July 3, 1962",
+          "photo": "https://jsonformatter.org/img/tom-cruise.jpg",
+          "wife": "",
+          "weight": 67.5,
+          "hasChildren": true,
+          "hasGreyHair": false,
+          "children": [
+            "Suri",
+            "Isabella Jane",
+            "Connor"
+          ]
+        },
+        {
+          "name": "Robert Downey Jr.",
+          "age": 53,
+          "Born At": "New York City, NY",
+          "Birthdate": "April 4, 1965",
+          "photo": "https://jsonformatter.org/img/Robert-Downey-Jr.jpg",
+          "wife": "Susan Downey",
+          "weight": 77.1,
+          "hasChildren": true,
+          "hasGreyHair": false,
+          "children": [
+            "Indio Falconer",
+            "Avri Roel",
+            "Exton Elias"
+          ]
+        }
+      ]
+    }
+  expected: |
+    struct {
+    	Actors []struct {
+    		Birthdate   string   `json:"Birthdate"`
+    		BornAt      string   `json:"Born At"`
+    		Age         int      `json:"age"`
+    		Children    []string `json:"children"`
+    		HasChildren bool     `json:"hasChildren"`
+    		HasGreyHair bool     `json:"hasGreyHair"`
+    		Name        string   `json:"name"`
+    		Photo       string   `json:"photo"`
+    		Weight      float64  `json:"weight"`
+    		Wife        string   `json:"wife"`
+    	} `json:"Actors"`
+    }
+
+- name: object array
+  input: |
+      [
+        {
+          "name": "Tom Cruise",
+          "age": 56,
+          "Born At": "Syracuse, NY",
+          "Birthdate": "July 3, 1962",
+          "photo": "https://jsonformatter.org/img/tom-cruise.jpg",
+          "wife": "",
+          "weight": 67.5,
+          "hasChildren": true,
+          "hasGreyHair": false,
+          "children": [
+            "Suri",
+            "Isabella Jane",
+            "Connor"
+          ]
+        },
+        {
+          "name": "Robert Downey Jr.",
+          "age": 53,
+          "Born At": "New York City, NY",
+          "Birthdate": "April 4, 1965",
+          "photo": "https://jsonformatter.org/img/Robert-Downey-Jr.jpg",
+          "wife": "Susan Downey",
+          "weight": 77.1,
+          "hasChildren": true,
+          "hasGreyHair": false,
+          "children": [
+            "Indio Falconer",
+            "Avri Roel",
+            "Exton Elias"
+          ]
+        }
+      ]
+  expected: |
+    []struct {
+    	Birthdate   string   `json:"Birthdate"`
+    	BornAt      string   `json:"Born At"`
+    	Age         int      `json:"age"`
+    	Children    []string `json:"children"`
+    	HasChildren bool     `json:"hasChildren"`
+    	HasGreyHair bool     `json:"hasGreyHair"`
+    	Name        string   `json:"name"`
+    	Photo       string   `json:"photo"`
+    	Weight      float64  `json:"weight"`
+    	Wife        string   `json:"wife"`
+    }
