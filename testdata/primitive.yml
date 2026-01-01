@@ -1,0 +1,20 @@
+- input: |
+    100
+  expected: |
+    int
+- input: |
+    "hello"
+  expected: |
+    string
+- input: |
+    true
+  expected: |
+    bool
+- input: |
+    false
+  expected: |
+    bool
+- input: |
+    null
+  expected: |
+    any
