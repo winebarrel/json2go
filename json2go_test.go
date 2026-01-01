@@ -7,9 +7,9 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"gopkg.in/yaml.v3"
 	"github.com/stretchr/testify/require"
 	"github.com/winebarrel/json2go"
+	"go.yaml.in/yaml/v4"
 )
 
 func TestJsonToGo_Empty(t *testing.T) {
