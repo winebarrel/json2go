@@ -1,5 +1,7 @@
 # json2go
 
+json2go is a tool to convert JSON to Go Struct.
+
 ## Usage
 
 ```
