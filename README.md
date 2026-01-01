@@ -1,5 +1,7 @@
 # json2go
 
+[![CI](https://github.com/winebarrel/json2go/actions/workflows/ci.yml/badge.svg)](https://github.com/winebarrel/json2go/actions/workflows/ci.yml)
+
 json2go is a tool to convert JSON to Go Struct.
 
 ## Usage
