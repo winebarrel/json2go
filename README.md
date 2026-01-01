@@ -2,6 +2,12 @@
 
 json2go is a tool to convert JSON to Go Struct.
 
+## Installation
+
+```
+go install github.com/winebarrel/json2go/cmd/json2go@latest
+```
+
 ## Usage
 
 ```
