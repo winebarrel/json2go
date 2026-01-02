@@ -39,3 +39,7 @@
   # NOTE: not a bug.
   expected: |
     []any
+- input: |
+    []
+  expected: |
+    []any
