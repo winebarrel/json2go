@@ -92,7 +92,7 @@ func convertObject(m map[string]any, w io.Writer, sort bool) {
 	}
 
 	for _, n := range keys {
-		f := nameToField(n)
+		f := convertKey(n)
 
 		if f == "" {
 			f = "NAMING_FIELD"
@@ -118,7 +118,7 @@ func convertObject(m map[string]any, w io.Writer, sort bool) {
 	w.Write([]byte("}"))
 }
 
-func nameToField(key string) string {
+func convertKey(key string) string {
 	var buf strings.Builder
 	boundary := true
 

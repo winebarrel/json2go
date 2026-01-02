@@ -27,7 +27,7 @@ func TestNameToField(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.input+"->"+tt.expected, func(t *testing.T) {
 			assert := assert.New(t)
-			field := json2go.NameToField(tt.input)
+			field := json2go.ConvertKey(tt.input)
 			assert.Equal(tt.expected, field)
 		})
 	}
