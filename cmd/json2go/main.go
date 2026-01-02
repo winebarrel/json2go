@@ -16,14 +16,15 @@ func init() {
 	log.SetFlags(0)
 }
 
-func parseArgs() ([]byte, *json2go.Options) {
-	var cli struct {
-		json2go.Options
-		BodyFile kong.FileContentFlag `arg:"" optional:"" type:"filecontent" xor:"stdin" help:"JSON file. If not specified, read from stdin."`
-		Version  kong.VersionFlag
-	}
+type options struct {
+	BodyFile kong.FileContentFlag `arg:"" optional:"" type:"filecontent" xor:"stdin" help:"JSON file. If not specified, read from stdin."`
+	Sort     bool                 `short:"s" help:"Sort struct fields."`
+	Version  kong.VersionFlag
+}
 
-	parser := kong.Must(&cli, kong.Vars{"version": version})
+func parseArgs() *options {
+	opts := &options{}
+	parser := kong.Must(opts, kong.Vars{"version": version})
 	parser.Model.HelpFlag.Help = "Show help."
 	args := os.Args[1:]
 
@@ -35,16 +36,16 @@ func parseArgs() ([]byte, *json2go.Options) {
 		if stdin, err := io.ReadAll(os.Stdin); err != nil {
 			parser.FatalIfErrorf(err)
 		} else {
-			cli.BodyFile = stdin
+			opts.BodyFile = stdin
 		}
 	}
 
-	return cli.BodyFile, &cli.Options
+	return opts
 }
 
 func main() {
-	src, options := parseArgs()
-	out, err := json2go.Convert(src, options)
+	opts := parseArgs()
+	out, err := json2go.Convert(opts.BodyFile, opts.Sort)
 
 	if err != nil {
 		log.Fatal(err)
