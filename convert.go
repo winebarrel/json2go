@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"go/format"
 	"io"
+	"maps"
 	"slices"
 	"strconv"
 	"strings"
@@ -50,7 +51,7 @@ func convert0(x any, w io.Writer, sort bool) {
 			w.Write([]byte("int"))
 		}
 	case []any:
-		convertArray(v, w)
+		convertArray(v, w, sort)
 	case map[string]any:
 		convertObject(v, w, sort)
 	default:
@@ -58,9 +59,24 @@ func convert0(x any, w io.Writer, sort bool) {
 	}
 }
 
-func convertArray(a []any, w io.Writer) {
+func convertArray(a []any, w io.Writer, sort bool) {
 	if len(a) == 0 {
 		w.Write([]byte("[]any"))
+		return
+	}
+
+	maps := []map[string]any{}
+
+	for _, x := range a {
+		m, ok := x.(map[string]any)
+
+		if ok {
+			maps = append(maps, m)
+		}
+	}
+
+	if len(a) == len(maps) {
+		convertObjectArray(maps, w, sort)
 		return
 	}
 
@@ -81,6 +97,39 @@ func convertArray(a []any, w io.Writer) {
 	}
 
 	w.Write([]byte(base))
+}
+
+func convertObjectArray(a []map[string]any, w io.Writer, sort bool) {
+	union := a[0]
+	a = a[1:]
+
+	for _, m := range a {
+		for k := range m {
+			v, ok := union[k]
+
+			if !ok {
+				continue
+			}
+
+			var buf1, buf2 bytes.Buffer
+			convert0(v, &buf1, true)
+			convert0(m[k], &buf2, true)
+			t1 := buf1.String()
+			t2 := buf2.String()
+
+			if strings.HasPrefix(t1, "[]") && strings.HasPrefix(t2, "[]") && t1 != t2 {
+				union[k] = []any{}
+			} else if t1 != t2 {
+				union[k] = nil // any
+			}
+		}
+
+		maps.Copy(m, union)
+		union = m
+	}
+
+	w.Write([]byte("[]"))
+	convertObject(union, w, sort)
 }
 
 func convertObject(m map[string]any, w io.Writer, sort bool) {
