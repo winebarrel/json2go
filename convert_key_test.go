@@ -18,6 +18,7 @@ func TestNameToField(t *testing.T) {
 		{input: "foo_bar-zoo", expected: "FooBarZoo"},
 		{input: "f00", expected: "F00"},
 		{input: "0foo", expected: "X_0Foo"},
+		{input: "_0foo", expected: "X_0Foo"},
 		{input: "_foo", expected: "Foo"},
 		{input: "aaBBcc", expected: "AaBBcc"},
 		{input: "_-", expected: ""},

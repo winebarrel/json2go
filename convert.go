@@ -122,11 +122,11 @@ func convertKey(key string) string {
 	var buf strings.Builder
 	boundary := true
 
-	for i, r := range []rune(key) {
+	for _, r := range key {
 		if rune('0') <= r && r <= rune('9') {
 			boundary = true
 
-			if i == 0 {
+			if buf.Len() == 0 {
 				buf.WriteString("X_")
 			}
 
