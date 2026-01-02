@@ -21,7 +21,6 @@ Arguments:
 
 Flags:
   -h, --help       Show help.
-  -s, --sort       Sort struct fields.
       --version
 ```
 
@@ -57,24 +56,24 @@ Flags:
 // json2go example.json # or `cat example.json | json2go`
 struct {
 	Glossary struct {
-		Title    string `json:"title"`
 		GlossDiv struct {
-			Title     string `json:"title"`
 			GlossList struct {
 				GlossEntry struct {
 					Abbrev   string `json:"Abbrev"`
+					Acronym  string `json:"Acronym"`
 					GlossDef struct {
-						Para         string   `json:"para"`
 						GlossSeeAlso []string `json:"GlossSeeAlso"`
+						Para         string   `json:"para"`
 					} `json:"GlossDef"`
 					GlossSee  string `json:"GlossSee"`
+					GlossTerm string `json:"GlossTerm"`
 					ID        string `json:"ID"`
 					SortAs    string `json:"SortAs"`
-					GlossTerm string `json:"GlossTerm"`
-					Acronym   string `json:"Acronym"`
 				} `json:"GlossEntry"`
 			} `json:"GlossList"`
+			Title string `json:"title"`
 		} `json:"GlossDiv"`
+		Title string `json:"title"`
 	} `json:"glossary"`
 }
 ```
@@ -93,7 +92,7 @@ import (
 
 func main() {
 	json := `{"foo":"bar","zoo":[100,200],"baz":{"hoge":"piyo"}}`
-	gosrc, err := json2go.Convert([]byte(json), false)
+	gosrc, err := json2go.Convert([]byte(json))
 
 	if err != nil {
 		log.Fatal(err)
@@ -101,11 +100,11 @@ func main() {
 
 	fmt.Println(string(gosrc))
 	//=> struct {
-	//     Foo string `json:"foo"`
-	//     Zoo []int  `json:"zoo"`
 	//     Baz struct {
 	//       Hoge string `json:"hoge"`
 	//     } `json:"baz"`
+	//     Foo string `json:"foo"`
+	//     Zoo []int  `json:"zoo"`
 	//   }
 }
 ```

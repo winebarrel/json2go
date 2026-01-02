@@ -28,7 +28,7 @@ func TestConvert_Empty(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.input+"->"+tt.expected, func(t *testing.T) {
-			raw, err := json2go.Convert([]byte(tt.input), false)
+			raw, err := json2go.Convert([]byte(tt.input))
 			out := string(raw)
 			require.NoError(t, err)
 			assert.Equal(t, tt.expected, out)
@@ -37,7 +37,7 @@ func TestConvert_Empty(t *testing.T) {
 }
 
 func TestConvert_Err(t *testing.T) {
-	_, err := json2go.Convert([]byte("invalid"), false)
+	_, err := json2go.Convert([]byte("invalid"))
 	require.ErrorContains(t, err, "failed to parse json:")
 }
 
@@ -77,7 +77,7 @@ func TestConvert_OK(t *testing.T) {
 			}
 
 			t.Run(f+"/"+name, func(t *testing.T) {
-				out, err := json2go.Convert([]byte(tt.Input), true)
+				out, err := json2go.Convert([]byte(tt.Input))
 				require.NoError(t, err)
 				assert.Equal(t, tt.Expected, string(out))
 
