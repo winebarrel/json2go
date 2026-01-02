@@ -1,67 +1,67 @@
-- input: |
+- input: |-
     [1,2,3]
-  expected: |
+  expected: |-
     []int
-  unmarshal: |
+  unmarshal: |-
     &[1 2 3]
-- input: |
+- input: |-
     ["h","e","l","l","o"]
-  expected: |
+  expected: |-
     []string
-  unmarshal: |
+  unmarshal: |-
     &[h e l l o]
-- input: |
+- input: |-
     [true,false,true]
-  expected: |
+  expected: |-
     []bool
-  unmarshal: |
+  unmarshal: |-
     &[true false true]
-- input: |
+- input: |-
     [null]
-  expected: |
+  expected: |-
     []any
-  unmarshal: |
+  unmarshal: |-
     &[<nil>]
-- input: |
+- input: |-
     [1,"2",true]
-  expected: |
+  expected: |-
     []any
-  unmarshal: |
+  unmarshal: |-
     &[1 2 true]
-- input: |
+- input: |-
     [[100],[200]]
-  expected: |
+  expected: |-
     [][]int
-  unmarshal: |
+  unmarshal: |-
     &[[100] [200]]
-- input: |
+- input: |-
     [[[100]],[[200]]]
-  expected: |
+  expected: |-
     [][][]int
-  unmarshal: |
+  unmarshal: |-
     &[[[100]] [[200]]]
-- input: |
+- input: |-
     [["100"],["200"]]
-  expected: |
+  expected: |-
     [][]string
-  unmarshal: |
+  unmarshal: |-
     &[[100] [200]]
-- input: |
+- input: |-
     [[true],[false]]
-  expected: |
+  expected: |-
     [][]bool
-  unmarshal: |
+  unmarshal: |-
     &[[true] [false]]
-- input: |
+- input: |-
     [[1],["2"],[true]]
   # NOTE: not a bug.
-  expected: |
+  expected: |-
     []any
-  unmarshal: |
+  unmarshal: |-
     &[[1] [2] [true]]
-- input: |
+- input: |-
     []
-  expected: |
+  expected: |-
     []any
-  unmarshal: |
+  unmarshal: |-
     &[]

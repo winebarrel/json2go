@@ -71,29 +71,26 @@ func TestConvert_OK(t *testing.T) {
 
 		for _, tt := range tests {
 			name := tt.Name
-			input := strings.TrimSpace(tt.Input)
-			expected := strings.TrimSpace(tt.Expected)
-			unmarshal := strings.TrimSpace(tt.Unmarshal)
 
 			if name == "" {
-				name = input + "->" + expected
+				name = tt.Input + "->" + tt.Expected
 			}
 
 			t.Run(f+"/"+name, func(t *testing.T) {
-				out, err := json2go.Convert([]byte(input), true)
+				out, err := json2go.Convert([]byte(tt.Input), true)
 				require.NoError(t, err)
-				assert.Equal(t, expected, string(out))
+				assert.Equal(t, tt.Expected, string(out))
 
 				if testAcc {
 					x := compile(t, out)
-					err := json.Unmarshal([]byte(input), x)
+					err := json.Unmarshal([]byte(tt.Input), x)
 					require.NoError(t, err)
 
 					if f == "testdata/primitive.yml" {
 						x = reflect.ValueOf(x).Elem().Interface()
 					}
 
-					assert.Equal(t, unmarshal, fmt.Sprintf("%+v", x))
+					assert.Equal(t, tt.Unmarshal, fmt.Sprintf("%+v", x))
 				}
 			})
 		}

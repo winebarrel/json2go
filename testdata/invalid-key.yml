@@ -1,45 +1,45 @@
 - name: number
-  input: |
+  input: |-
     {
       "0": "a",
       "100": false,
       "_2": 9
     }
-  expected: |
+  expected: |-
     struct {
     	Num0   string `json:"0"`
     	Num100 bool   `json:"100"`
     	Num2   int    `json:"_2"`
     }
-  unmarshal: |
+  unmarshal: |-
     &{Num0:a Num100:false Num2:9}
 - name: symbol
-  input: |
+  input: |-
     {
       "_?": "a",
       "?$)": false,
       "(*+": 9
     }
-  expected: |
+  expected: |-
     struct {
     	NAMING_FIELD  int    `json:"(*+"`
     	NAMING_FIELD0 bool   `json:"?$)"`
     	NAMING_FIELD1 string `json:"_?"`
     }
-  unmarshal: |
+  unmarshal: |-
     &{NAMING_FIELD:9 NAMING_FIELD0:false NAMING_FIELD1:a}
 - name: duplicate key
-  input: |
+  input: |-
     {
       "_1foo": "b",
       "__1foo": true,
       "___1foo": 80
     }
-  expected: |
+  expected: |-
     struct {
     	Num1Foo  string `json:"_1foo"`
     	Num1Foo0 bool   `json:"__1foo"`
     	Num1Foo1 int    `json:"___1foo"`
     }
-  unmarshal: |
+  unmarshal: |-
     &{Num1Foo:b Num1Foo0:true Num1Foo1:80}

@@ -1,5 +1,5 @@
 - name: union object array
-  input: |
+  input: |-
       [
         {
           "age": 56,
@@ -28,7 +28,7 @@
           ]
         }
       ]
-  expected: |
+  expected: |-
     []struct {
     	Birthdate   string   `json:"Birthdate"`
     	BornAt      string   `json:"Born At"`
@@ -41,10 +41,10 @@
     	Weight      float64  `json:"weight"`
     	Wife        string   `json:"wife"`
     }
-  unmarshal: |
+  unmarshal: |-
     &[{Birthdate:July 3, 1962 BornAt: Age:56 Children:[Suri Isabella Jane Connor] HasChildren:true HasGreyHair:false Name: Photo:https://jsonformatter.org/img/tom-cruise.jpg Weight:67.5 Wife:} {Birthdate: BornAt:New York City, NY Age:0 Children:[Indio Falconer Avri Roel Exton Elias] HasChildren:true HasGreyHair:false Name:Robert Downey Jr. Photo:https://jsonformatter.org/img/Robert-Downey-Jr.jpg Weight:77.1 Wife:Susan Downey}]
 - name: union object array include any
-  input: |
+  input: |-
       [
         {
           "name": "Tom Cruise",
@@ -79,7 +79,7 @@
           ]
         }
       ]
-  expected: |
+  expected: |-
     []struct {
     	Birthdate   string   `json:"Birthdate"`
     	BornAt      string   `json:"Born At"`
@@ -92,10 +92,10 @@
     	Weight      float64  `json:"weight"`
     	Wife        any      `json:"wife"`
     }
-  unmarshal: |
+  unmarshal: |-
     &[{Birthdate:July 3, 1962 BornAt:Syracuse, NY Age:56 Children:[Suri Isabella Jane Connor] HasChildren:true HasGreyHair:false Name:Tom Cruise Photo:https://jsonformatter.org/img/tom-cruise.jpg Weight:67.5 Wife:<nil>} {Birthdate:April 4, 1965 BornAt:New York City, NY Age:53 Children:[Indio Falconer Avri Roel Exton Elias] HasChildren:true HasGreyHair:false Name:Robert Downey Jr. Photo:https://jsonformatter.org/img/Robert-Downey-Jr.jpg Weight:77.1 Wife:Susan Downey}]
 - name: union object array include any array
-  input: |
+  input: |-
       [
         {
           "name": "Tom Cruise",
@@ -131,7 +131,7 @@
           ]
         }
       ]
-  expected: |
+  expected: |-
     []struct {
     	Birthdate   string  `json:"Birthdate"`
     	BornAt      string  `json:"Born At"`
@@ -144,10 +144,10 @@
     	Weight      float64 `json:"weight"`
     	Wife        string  `json:"wife"`
     }
-  unmarshal: |
+  unmarshal: |-
     &[{Birthdate:July 3, 1962 BornAt:Syracuse, NY Age:56 Children:[Suri Isabella Jane Connor 100] HasChildren:true HasGreyHair:false Name:Tom Cruise Photo:https://jsonformatter.org/img/tom-cruise.jpg Weight:67.5 Wife:} {Birthdate:April 4, 1965 BornAt:New York City, NY Age:53 Children:[Indio Falconer Avri Roel Exton Elias] HasChildren:true HasGreyHair:false Name:Robert Downey Jr. Photo:https://jsonformatter.org/img/Robert-Downey-Jr.jpg Weight:77.1 Wife:Susan Downey}]
 - name: union object array include different type
-  input: |
+  input: |-
       [
         {
           "age": 56,
@@ -176,7 +176,7 @@
           ]
         }
       ]
-  expected: |
+  expected: |-
     []struct {
     	Birthdate   string   `json:"Birthdate"`
     	BornAt      string   `json:"Born At"`
@@ -189,10 +189,10 @@
     	Weight      any      `json:"weight"`
     	Wife        string   `json:"wife"`
     }
-  unmarshal: |
+  unmarshal: |-
     &[{Birthdate:July 3, 1962 BornAt: Age:56 Children:[Suri Isabella Jane Connor] HasChildren:true HasGreyHair:false Name: Photo:https://jsonformatter.org/img/tom-cruise.jpg Weight:67.5 Wife:} {Birthdate: BornAt:New York City, NY Age:0 Children:[Indio Falconer Avri Roel Exton Elias] HasChildren:true HasGreyHair:false Name:Robert Downey Jr. Photo:https://jsonformatter.org/img/Robert-Downey-Jr.jpg Weight:77.1 Wife:Susan Downey}]
 - name: union object array include different type array
-  input: |
+  input: |-
       [
         {
           "name": "Tom Cruise",
@@ -225,7 +225,7 @@
           ]
         }
       ]
-  expected: |
+  expected: |-
     []struct {
     	Birthdate   string  `json:"Birthdate"`
     	BornAt      string  `json:"Born At"`
@@ -238,5 +238,5 @@
     	Weight      float64 `json:"weight"`
     	Wife        string  `json:"wife"`
     }
-  unmarshal: |
+  unmarshal: |-
     &[{Birthdate:July 3, 1962 BornAt:Syracuse, NY Age:56 Children:[100] HasChildren:true HasGreyHair:false Name:Tom Cruise Photo:https://jsonformatter.org/img/tom-cruise.jpg Weight:67.5 Wife:} {Birthdate:April 4, 1965 BornAt:New York City, NY Age:53 Children:[Indio Falconer Avri Roel Exton Elias] HasChildren:true HasGreyHair:false Name:Robert Downey Jr. Photo:https://jsonformatter.org/img/Robert-Downey-Jr.jpg Weight:77.1 Wife:Susan Downey}]
