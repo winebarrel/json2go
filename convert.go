@@ -13,7 +13,7 @@ import (
 	"unicode"
 )
 
-func Convert(src []byte, sort bool) ([]byte, error) {
+func Convert(src []byte) ([]byte, error) {
 	if len(bytes.TrimSpace(src)) == 0 {
 		return []byte{}, nil
 	}
@@ -28,7 +28,7 @@ func Convert(src []byte, sort bool) ([]byte, error) {
 	}
 
 	var buf bytes.Buffer
-	convert0(x, &buf, sort)
+	convert0(x, &buf)
 	out, err := format.Source(buf.Bytes())
 
 	if err != nil {
@@ -38,7 +38,7 @@ func Convert(src []byte, sort bool) ([]byte, error) {
 	return out, nil
 }
 
-func convert0(x any, w io.Writer, sort bool) {
+func convert0(x any, w io.Writer) {
 	switch v := x.(type) {
 	case string:
 		w.Write([]byte("string"))
@@ -51,15 +51,15 @@ func convert0(x any, w io.Writer, sort bool) {
 			w.Write([]byte("int"))
 		}
 	case []any:
-		convertArray(v, w, sort)
+		convertArray(v, w)
 	case map[string]any:
-		convertObject(v, w, sort)
+		convertObject(v, w)
 	default:
 		w.Write([]byte("any"))
 	}
 }
 
-func convertArray(a []any, w io.Writer, sort bool) {
+func convertArray(a []any, w io.Writer) {
 	if len(a) == 0 {
 		w.Write([]byte("[]any"))
 		return
@@ -76,7 +76,7 @@ func convertArray(a []any, w io.Writer, sort bool) {
 	}
 
 	if len(a) == len(maps) {
-		convertObjectArray(maps, w, sort)
+		convertObjectArray(maps, w)
 		return
 	}
 
@@ -85,7 +85,7 @@ func convertArray(a []any, w io.Writer, sort bool) {
 
 	for _, x := range a {
 		var buf bytes.Buffer
-		convert0(x, &buf, true)
+		convert0(x, &buf)
 		t := buf.String()
 
 		if t == "any" || (base != "" && base != t) {
@@ -99,7 +99,7 @@ func convertArray(a []any, w io.Writer, sort bool) {
 	w.Write([]byte(base))
 }
 
-func convertObjectArray(a []map[string]any, w io.Writer, sort bool) {
+func convertObjectArray(a []map[string]any, w io.Writer) {
 	union := a[0]
 	a = a[1:]
 
@@ -112,8 +112,8 @@ func convertObjectArray(a []map[string]any, w io.Writer, sort bool) {
 			}
 
 			var buf1, buf2 bytes.Buffer
-			convert0(v, &buf1, true)
-			convert0(m[k], &buf2, true)
+			convert0(v, &buf1)
+			convert0(m[k], &buf2)
 			t1 := buf1.String()
 			t2 := buf2.String()
 
@@ -133,10 +133,10 @@ func convertObjectArray(a []map[string]any, w io.Writer, sort bool) {
 	}
 
 	w.Write([]byte("[]"))
-	convertObject(union, w, sort)
+	convertObject(union, w)
 }
 
-func convertObject(m map[string]any, w io.Writer, sort bool) {
+func convertObject(m map[string]any, w io.Writer) {
 	w.Write([]byte("struct {\n"))
 	fields := map[string]int{}
 	keys := []string{}
@@ -145,9 +145,7 @@ func convertObject(m map[string]any, w io.Writer, sort bool) {
 		keys = append(keys, k)
 	}
 
-	if sort {
-		slices.Sort(keys)
-	}
+	slices.Sort(keys)
 
 	for _, n := range keys {
 		f := convertKey(n)
@@ -167,7 +165,7 @@ func convertObject(m map[string]any, w io.Writer, sort bool) {
 		}
 
 		w.Write([]byte(" "))
-		convert0(m[n], w, sort)
+		convert0(m[n], w)
 		w.Write([]byte(" `json:\""))
 		w.Write([]byte(n))
 		w.Write([]byte("\"`\n"))

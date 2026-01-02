@@ -18,7 +18,6 @@ func init() {
 
 type options struct {
 	BodyFile kong.FileContentFlag `arg:"" optional:"" type:"filecontent" xor:"stdin" help:"JSON file. If not specified, read from stdin."`
-	Sort     bool                 `short:"s" help:"Sort struct fields."`
 	Version  kong.VersionFlag
 }
 
@@ -45,7 +44,7 @@ func parseArgs() *options {
 
 func main() {
 	opts := parseArgs()
-	out, err := json2go.Convert(opts.BodyFile, opts.Sort)
+	out, err := json2go.Convert(opts.BodyFile)
 
 	if err != nil {
 		log.Fatal(err)
