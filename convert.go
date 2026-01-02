@@ -12,7 +12,7 @@ import (
 	"unicode"
 )
 
-func Convert(src []byte, options *Options) ([]byte, error) {
+func Convert(src []byte, sort bool) ([]byte, error) {
 	if len(bytes.TrimSpace(src)) == 0 {
 		return []byte{}, nil
 	}
@@ -27,7 +27,7 @@ func Convert(src []byte, options *Options) ([]byte, error) {
 	}
 
 	var buf bytes.Buffer
-	convert0(x, &buf, options.Sort)
+	convert0(x, &buf, sort)
 	out, err := format.Source(buf.Bytes())
 
 	if err != nil {
