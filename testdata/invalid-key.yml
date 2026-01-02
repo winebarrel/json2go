@@ -11,6 +11,8 @@
     	Num100 bool   `json:"100"`
     	Num2   int    `json:"_2"`
     }
+  unmarshal: |
+    &{Num0:a Num100:false Num2:9}
 - name: symbol
   input: |
     {
@@ -24,6 +26,8 @@
     	NAMING_FIELD0 bool   `json:"?$)"`
     	NAMING_FIELD1 string `json:"_?"`
     }
+  unmarshal: |
+    &{NAMING_FIELD:9 NAMING_FIELD0:false NAMING_FIELD1:a}
 - name: duplicate key
   input: |
     {
@@ -37,3 +41,5 @@
     	Num1Foo0 bool   `json:"__1foo"`
     	Num1Foo1 int    `json:"___1foo"`
     }
+  unmarshal: |
+    &{Num1Foo:b Num1Foo0:true Num1Foo1:80}

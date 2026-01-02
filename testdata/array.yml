@@ -2,44 +2,66 @@
     [1,2,3]
   expected: |
     []int
+  unmarshal: |
+    &[1 2 3]
 - input: |
     ["h","e","l","l","o"]
   expected: |
     []string
+  unmarshal: |
+    &[h e l l o]
 - input: |
     [true,false,true]
   expected: |
     []bool
+  unmarshal: |
+    &[true false true]
 - input: |
     [null]
   expected: |
     []any
+  unmarshal: |
+    &[<nil>]
 - input: |
     [1,"2",true]
   expected: |
     []any
+  unmarshal: |
+    &[1 2 true]
 - input: |
     [[100],[200]]
   expected: |
     [][]int
+  unmarshal: |
+    &[[100] [200]]
 - input: |
     [[[100]],[[200]]]
   expected: |
     [][][]int
+  unmarshal: |
+    &[[[100]] [[200]]]
 - input: |
     [["100"],["200"]]
   expected: |
     [][]string
+  unmarshal: |
+    &[[100] [200]]
 - input: |
     [[true],[false]]
   expected: |
     [][]bool
+  unmarshal: |
+    &[[true] [false]]
 - input: |
     [[1],["2"],[true]]
   # NOTE: not a bug.
   expected: |
     []any
+  unmarshal: |
+    &[[1] [2] [true]]
 - input: |
     []
   expected: |
     []any
+  unmarshal: |
+    &[]
