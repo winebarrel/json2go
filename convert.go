@@ -127,7 +127,7 @@ func convertKey(key string) string {
 			boundary = true
 
 			if buf.Len() == 0 {
-				buf.WriteString("X_")
+				buf.WriteString("Num")
 			}
 
 			buf.WriteRune(r)
