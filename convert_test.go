@@ -71,7 +71,7 @@ func TestConvert_OK(t *testing.T) {
 				name = input + "->" + expected
 			}
 
-			t.Run(name, func(t *testing.T) {
+			t.Run(f+"/"+name, func(t *testing.T) {
 				out, err := json2go.Convert([]byte(input), true)
 				require.NoError(t, err)
 				assert.Equal(t, expected, string(out))
