@@ -101,7 +101,6 @@
     		Wife        string   `json:"wife"`
     	} `json:"Actors"`
     }
-
 - name: object array
   input: |
       [
@@ -150,4 +149,10 @@
     	Photo       string   `json:"photo"`
     	Weight      float64  `json:"weight"`
     	Wife        string   `json:"wife"`
+    }
+- name: empty object
+  input: |
+    {}
+  expected: |
+    struct {
     }
