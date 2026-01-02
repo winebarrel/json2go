@@ -117,9 +117,13 @@ func convertObjectArray(a []map[string]any, w io.Writer, sort bool) {
 			t1 := buf1.String()
 			t2 := buf2.String()
 
-			if strings.HasPrefix(t1, "[]") && strings.HasPrefix(t2, "[]") && t1 != t2 {
+			if t1 == t2 {
+				continue
+			}
+
+			if strings.HasPrefix(t1, "[]") && strings.HasPrefix(t2, "[]") {
 				union[k] = []any{}
-			} else if t1 != t2 {
+			} else {
 				union[k] = nil // any
 			}
 		}
