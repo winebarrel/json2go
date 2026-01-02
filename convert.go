@@ -122,7 +122,7 @@ func convertKey(key string) string {
 	var buf strings.Builder
 	boundary := true
 
-	for _, r := range []rune(key) {
+	for _, r := range key {
 		if rune('0') <= r && r <= rune('9') {
 			boundary = true
 
