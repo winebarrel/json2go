@@ -24,8 +24,8 @@ Flags:
       --version
 ```
 
-```
-$ cat example.json
+```js
+// example.json
 {
   "glossary": {
     "title": "example glossary",
@@ -51,8 +51,9 @@ $ cat example.json
     }
   }
 }
-
-$ json2go example.json # or `cat example.json | json2go`
+```
+```go
+// json2go example.json # or `cat example.json | json2go`
 struct {
 	Glossary struct {
 		Title    string `json:"title"`
@@ -74,5 +75,36 @@ struct {
 			} `json:"GlossList"`
 		} `json:"GlossDiv"`
 	} `json:"glossary"`
+}
+```
+
+### Use as a library
+
+```go
+package main
+
+import (
+	"fmt"
+	"log"
+
+	"github.com/winebarrel/json2go"
+)
+
+func main() {
+	json := `{"foo":"bar","zoo":[100,200],"baz":{"hoge":"piyo"}}`
+	gosrc, err := json2go.Convert([]byte(json), false)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(string(gosrc))
+	//=> struct {
+	//     Foo string `json:"foo"`
+	//     Zoo []int  `json:"zoo"`
+	//     Baz struct {
+	//       Hoge string `json:"hoge"`
+	//     } `json:"baz"`
+	//   }
 }
 ```
