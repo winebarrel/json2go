@@ -11,7 +11,11 @@ vet:
 
 .PHONY: test
 test:
-	go test -v ./...
+	go test -v -count=1 ./...
+
+.PHONY: testacc
+testacc:
+	$(MAKE) test TEST_ACC=1
 
 .PHONY: lint
 lint:

@@ -48,6 +48,8 @@
     		Title string `json:"title"`
     	} `json:"glossary"`
     }
+  unmarshal: |
+    &{Glossary:{GlossDiv:{GlossList:{GlossEntry:{Abbrev:ISO 8879:1986 Acronym:SGML GlossDef:{GlossSeeAlso:[GML XML] Para:A meta-markup language, used to create markup languages such as DocBook.} GlossSee:markup GlossTerm:Standard Generalized Markup Language ID:SGML SortAs:SGML}} Title:S} Title:example glossary}}
 - name: object 2
   input: |
     {
@@ -101,6 +103,8 @@
     		Wife        string   `json:"wife"`
     	} `json:"Actors"`
     }
+  unmarshal: |
+    &{Actors:[{Birthdate:July 3, 1962 BornAt:Syracuse, NY Age:56 Children:[Suri Isabella Jane Connor] HasChildren:true HasGreyHair:false Name:Tom Cruise Photo:https://jsonformatter.org/img/tom-cruise.jpg Weight:67.5 Wife:} {Birthdate:April 4, 1965 BornAt:New York City, NY Age:53 Children:[Indio Falconer Avri Roel Exton Elias] HasChildren:true HasGreyHair:false Name:Robert Downey Jr. Photo:https://jsonformatter.org/img/Robert-Downey-Jr.jpg Weight:77.1 Wife:Susan Downey}]}
 - name: object array
   input: |
       [
@@ -150,9 +154,13 @@
     	Weight      float64  `json:"weight"`
     	Wife        string   `json:"wife"`
     }
+  unmarshal: |
+    &[{Birthdate:July 3, 1962 BornAt:Syracuse, NY Age:56 Children:[Suri Isabella Jane Connor] HasChildren:true HasGreyHair:false Name:Tom Cruise Photo:https://jsonformatter.org/img/tom-cruise.jpg Weight:67.5 Wife:} {Birthdate:April 4, 1965 BornAt:New York City, NY Age:53 Children:[Indio Falconer Avri Roel Exton Elias] HasChildren:true HasGreyHair:false Name:Robert Downey Jr. Photo:https://jsonformatter.org/img/Robert-Downey-Jr.jpg Weight:77.1 Wife:Susan Downey}]
 - name: empty object
   input: |
     {}
   expected: |
     struct {
     }
+  unmarshal: |
+    &{}
