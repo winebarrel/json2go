@@ -59,6 +59,11 @@ func convert0(x any, w io.Writer, sort bool) {
 }
 
 func convertArray(a []any, w io.Writer) {
+	if len(a) == 0 {
+		w.Write([]byte("[]any"))
+		return
+	}
+
 	w.Write([]byte("[]"))
 	base := ""
 
