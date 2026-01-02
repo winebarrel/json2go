@@ -101,7 +101,6 @@
     		Wife        string   `json:"wife"`
     	} `json:"Actors"`
     }
-
 - name: object array
   input: |
       [
