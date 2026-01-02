@@ -151,3 +151,9 @@
     	Weight      float64  `json:"weight"`
     	Wife        string   `json:"wife"`
     }
+- name: empty object
+  input: |
+    {}
+  expected: |
+    struct {
+    }
