@@ -2,19 +2,29 @@
     100
   expected: |
     int
+  unmarshal: |
+    100
 - input: |
     "hello"
   expected: |
     string
+  unmarshal: |
+    hello
 - input: |
     true
   expected: |
     bool
+  unmarshal: |
+    true
 - input: |
     false
   expected: |
     bool
+  unmarshal: |
+    false
 - input: |
     null
   expected: |
     any
+  unmarshal: |
+    <nil>

@@ -7,6 +7,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"plugin"
+	"reflect"
 	"strings"
 	"testing"
 
@@ -83,10 +84,15 @@ func TestConvert_OK(t *testing.T) {
 				require.NoError(t, err)
 				assert.Equal(t, expected, string(out))
 
-				if testAcc && f != "testdata/primitive.yml" {
+				if testAcc {
 					x := compile(t, out)
 					err := json.Unmarshal([]byte(input), x)
 					require.NoError(t, err)
+
+					if f == "testdata/primitive.yml" {
+						x = reflect.ValueOf(x).Elem().Interface()
+					}
+
 					assert.Equal(t, unmarshal, fmt.Sprintf("%+v", x))
 				}
 			})
