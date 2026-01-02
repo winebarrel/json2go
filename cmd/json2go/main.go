@@ -44,7 +44,7 @@ func parseArgs() ([]byte, *json2go.Options) {
 
 func main() {
 	src, options := parseArgs()
-	out, err := json2go.JsonToGo(src, options)
+	out, err := json2go.Convert(src, options)
 
 	if err != nil {
 		log.Fatal(err)
