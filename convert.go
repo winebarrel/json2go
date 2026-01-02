@@ -12,7 +12,7 @@ import (
 	"unicode"
 )
 
-func JsonToGo(src []byte, options *Options) ([]byte, error) {
+func Convert(src []byte, options *Options) ([]byte, error) {
 	if len(bytes.TrimSpace(src)) == 0 {
 		return []byte{}, nil
 	}
