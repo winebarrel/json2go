@@ -54,7 +54,7 @@ func TestOrderdMapEntries(t *testing.T) {
 	assert.Equal(t, expected, members)
 }
 
-func TestOrderdMapMerge(t *testing.T) {
+func TestOrderedMapMerge(t *testing.T) {
 	var om1, om2 *parser.OrderedMap
 
 	{
