@@ -100,11 +100,12 @@ func main() {
 
 	fmt.Println(string(gosrc))
 	//=> struct {
+	//     Foo string `json:"foo"`
+	//     Zoo []int  `json:"zoo"`
 	//     Baz struct {
 	//       Hoge string `json:"hoge"`
 	//     } `json:"baz"`
 	//     Foo string `json:"foo"`
-	//     Zoo []int  `json:"zoo"`
 	//   }
 }
 ```
