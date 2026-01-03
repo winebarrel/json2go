@@ -124,7 +124,7 @@ func convertObjectArray(a []*parser.JsonObject, w io.Writer) {
 				union.Set(k, &parser.JsonValue{Array: &parser.JsonArray{}}) // []any
 			} else {
 				null := "null"
-				union.Set(k, &parser.JsonValue{Null: &null}) // []any
+				union.Set(k, &parser.JsonValue{Null: &null}) // any
 			}
 		}
 
