@@ -9,7 +9,7 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/winebarrel/json2go/v2/parser"
+	"github.com/winebarrel/jsonast"
 )
 
 func Convert(src []byte) ([]byte, error) {
@@ -21,7 +21,7 @@ func ConvertWithFilename(filename string, src []byte) ([]byte, error) {
 		return []byte{}, nil
 	}
 
-	v, err := parser.ParseJSON(filename, src)
+	v, err := jsonast.ParseJSON(filename, src)
 
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse json: %w", err)
@@ -38,7 +38,7 @@ func ConvertWithFilename(filename string, src []byte) ([]byte, error) {
 	return out, nil
 }
 
-func convert0(v *parser.JsonValue, w io.Writer) {
+func convert0(v *jsonast.JsonValue, w io.Writer) {
 	if v.String != nil {
 		w.Write([]byte("string"))
 	} else if v.False != nil || v.True != nil {
@@ -58,13 +58,13 @@ func convert0(v *parser.JsonValue, w io.Writer) {
 	}
 }
 
-func convertArray(a *parser.JsonArray, w io.Writer) {
+func convertArray(a *jsonast.JsonArray, w io.Writer) {
 	if len(a.Elements) == 0 {
 		w.Write([]byte("[]any"))
 		return
 	}
 
-	objs := []*parser.JsonObject{}
+	objs := []*jsonast.JsonObject{}
 
 	for _, x := range a.Elements {
 		if x.Object != nil {
@@ -96,12 +96,12 @@ func convertArray(a *parser.JsonArray, w io.Writer) {
 	w.Write([]byte(base))
 }
 
-func convertObjectArray(a []*parser.JsonObject, w io.Writer) {
-	union := a[0].Map()
+func convertObjectArray(a []*jsonast.JsonObject, w io.Writer) {
+	union := orderedMapFrom(a[0])
 	a = a[1:]
 
 	for _, obj := range a {
-		m := obj.Map()
+		m := orderedMapFrom(obj)
 
 		for k, v := range m.Entries() {
 			uv, ok := union.Get(k)
@@ -121,10 +121,10 @@ func convertObjectArray(a []*parser.JsonObject, w io.Writer) {
 			}
 
 			if strings.HasPrefix(t1, "[]") && strings.HasPrefix(t2, "[]") {
-				union.Set(k, &parser.JsonValue{Array: &parser.JsonArray{}}) // []any
+				union.Set(k, &jsonast.JsonValue{Array: &jsonast.JsonArray{}}) // []any
 			} else {
 				null := "null"
-				union.Set(k, &parser.JsonValue{Null: &null}) // any
+				union.Set(k, &jsonast.JsonValue{Null: &null}) // any
 			}
 		}
 
@@ -136,7 +136,7 @@ func convertObjectArray(a []*parser.JsonObject, w io.Writer) {
 	convertObject(union.Object(), w)
 }
 
-func convertObject(obj *parser.JsonObject, w io.Writer) {
+func convertObject(obj *jsonast.JsonObject, w io.Writer) {
 	w.Write([]byte("struct {\n"))
 	fields := map[string]int{}
 
