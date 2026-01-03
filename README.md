@@ -105,7 +105,6 @@ func main() {
 	//     Baz struct {
 	//       Hoge string `json:"hoge"`
 	//     } `json:"baz"`
-	//     Foo string `json:"foo"`
 	//   }
 }
 ```
