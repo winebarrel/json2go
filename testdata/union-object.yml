@@ -30,19 +30,19 @@
       ]
   expected: |-
     []struct {
-    	Birthdate   string   `json:"Birthdate"`
-    	BornAt      string   `json:"Born At"`
-    	Age         int      `json:"age"`
-    	Children    []string `json:"children"`
-    	HasChildren bool     `json:"hasChildren"`
-    	HasGreyHair bool     `json:"hasGreyHair"`
     	Name        string   `json:"name"`
+    	BornAt      string   `json:"Born At"`
     	Photo       string   `json:"photo"`
-    	Weight      float64  `json:"weight"`
     	Wife        string   `json:"wife"`
+    	Weight      float64  `json:"weight"`
+    	HasChildren bool     `json:"hasChildren"`
+    	Children    []string `json:"children"`
+    	Age         int      `json:"age"`
+    	Birthdate   string   `json:"Birthdate"`
+    	HasGreyHair bool     `json:"hasGreyHair"`
     }
   unmarshal: |-
-    &[{Birthdate:July 3, 1962 BornAt: Age:56 Children:[Suri Isabella Jane Connor] HasChildren:true HasGreyHair:false Name: Photo:https://jsonformatter.org/img/tom-cruise.jpg Weight:67.5 Wife:} {Birthdate: BornAt:New York City, NY Age:0 Children:[Indio Falconer Avri Roel Exton Elias] HasChildren:true HasGreyHair:false Name:Robert Downey Jr. Photo:https://jsonformatter.org/img/Robert-Downey-Jr.jpg Weight:77.1 Wife:Susan Downey}]
+    &[{Name: BornAt: Photo:https://jsonformatter.org/img/tom-cruise.jpg Wife: Weight:67.5 HasChildren:true Children:[Suri Isabella Jane Connor] Age:56 Birthdate:July 3, 1962 HasGreyHair:false} {Name:Robert Downey Jr. BornAt:New York City, NY Photo:https://jsonformatter.org/img/Robert-Downey-Jr.jpg Wife:Susan Downey Weight:77.1 HasChildren:true Children:[Indio Falconer Avri Roel Exton Elias] Age:0 Birthdate: HasGreyHair:false}]
 - name: union object array include any
   input: |-
       [
@@ -81,19 +81,19 @@
       ]
   expected: |-
     []struct {
-    	Birthdate   string   `json:"Birthdate"`
-    	BornAt      string   `json:"Born At"`
+    	Name        string   `json:"name"`
     	Age         int      `json:"age"`
-    	Children    []string `json:"children"`
+    	BornAt      string   `json:"Born At"`
+    	Birthdate   string   `json:"Birthdate"`
+    	Photo       string   `json:"photo"`
+    	Wife        any      `json:"wife"`
+    	Weight      float64  `json:"weight"`
     	HasChildren bool     `json:"hasChildren"`
     	HasGreyHair bool     `json:"hasGreyHair"`
-    	Name        string   `json:"name"`
-    	Photo       string   `json:"photo"`
-    	Weight      float64  `json:"weight"`
-    	Wife        any      `json:"wife"`
+    	Children    []string `json:"children"`
     }
   unmarshal: |-
-    &[{Birthdate:July 3, 1962 BornAt:Syracuse, NY Age:56 Children:[Suri Isabella Jane Connor] HasChildren:true HasGreyHair:false Name:Tom Cruise Photo:https://jsonformatter.org/img/tom-cruise.jpg Weight:67.5 Wife:<nil>} {Birthdate:April 4, 1965 BornAt:New York City, NY Age:53 Children:[Indio Falconer Avri Roel Exton Elias] HasChildren:true HasGreyHair:false Name:Robert Downey Jr. Photo:https://jsonformatter.org/img/Robert-Downey-Jr.jpg Weight:77.1 Wife:Susan Downey}]
+    &[{Name:Tom Cruise Age:56 BornAt:Syracuse, NY Birthdate:July 3, 1962 Photo:https://jsonformatter.org/img/tom-cruise.jpg Wife:<nil> Weight:67.5 HasChildren:true HasGreyHair:false Children:[Suri Isabella Jane Connor]} {Name:Robert Downey Jr. Age:53 BornAt:New York City, NY Birthdate:April 4, 1965 Photo:https://jsonformatter.org/img/Robert-Downey-Jr.jpg Wife:Susan Downey Weight:77.1 HasChildren:true HasGreyHair:false Children:[Indio Falconer Avri Roel Exton Elias]}]
 - name: union object array include any array
   input: |-
       [
@@ -133,19 +133,19 @@
       ]
   expected: |-
     []struct {
-    	Birthdate   string  `json:"Birthdate"`
-    	BornAt      string  `json:"Born At"`
+    	Name        string  `json:"name"`
     	Age         int     `json:"age"`
-    	Children    []any   `json:"children"`
+    	BornAt      string  `json:"Born At"`
+    	Birthdate   string  `json:"Birthdate"`
+    	Photo       string  `json:"photo"`
+    	Wife        string  `json:"wife"`
+    	Weight      float64 `json:"weight"`
     	HasChildren bool    `json:"hasChildren"`
     	HasGreyHair bool    `json:"hasGreyHair"`
-    	Name        string  `json:"name"`
-    	Photo       string  `json:"photo"`
-    	Weight      float64 `json:"weight"`
-    	Wife        string  `json:"wife"`
+    	Children    []any   `json:"children"`
     }
   unmarshal: |-
-    &[{Birthdate:July 3, 1962 BornAt:Syracuse, NY Age:56 Children:[Suri Isabella Jane Connor 100] HasChildren:true HasGreyHair:false Name:Tom Cruise Photo:https://jsonformatter.org/img/tom-cruise.jpg Weight:67.5 Wife:} {Birthdate:April 4, 1965 BornAt:New York City, NY Age:53 Children:[Indio Falconer Avri Roel Exton Elias] HasChildren:true HasGreyHair:false Name:Robert Downey Jr. Photo:https://jsonformatter.org/img/Robert-Downey-Jr.jpg Weight:77.1 Wife:Susan Downey}]
+    &[{Name:Tom Cruise Age:56 BornAt:Syracuse, NY Birthdate:July 3, 1962 Photo:https://jsonformatter.org/img/tom-cruise.jpg Wife: Weight:67.5 HasChildren:true HasGreyHair:false Children:[Suri Isabella Jane Connor 100]} {Name:Robert Downey Jr. Age:53 BornAt:New York City, NY Birthdate:April 4, 1965 Photo:https://jsonformatter.org/img/Robert-Downey-Jr.jpg Wife:Susan Downey Weight:77.1 HasChildren:true HasGreyHair:false Children:[Indio Falconer Avri Roel Exton Elias]}]
 - name: union object array include different type
   input: |-
       [
@@ -178,19 +178,19 @@
       ]
   expected: |-
     []struct {
-    	Birthdate   string   `json:"Birthdate"`
-    	BornAt      string   `json:"Born At"`
-    	Age         int      `json:"age"`
-    	Children    []string `json:"children"`
-    	HasChildren bool     `json:"hasChildren"`
-    	HasGreyHair bool     `json:"hasGreyHair"`
     	Name        string   `json:"name"`
+    	BornAt      string   `json:"Born At"`
     	Photo       string   `json:"photo"`
-    	Weight      any      `json:"weight"`
     	Wife        string   `json:"wife"`
+    	Weight      any      `json:"weight"`
+    	HasChildren bool     `json:"hasChildren"`
+    	Children    []string `json:"children"`
+    	Age         int      `json:"age"`
+    	Birthdate   string   `json:"Birthdate"`
+    	HasGreyHair bool     `json:"hasGreyHair"`
     }
   unmarshal: |-
-    &[{Birthdate:July 3, 1962 BornAt: Age:56 Children:[Suri Isabella Jane Connor] HasChildren:true HasGreyHair:false Name: Photo:https://jsonformatter.org/img/tom-cruise.jpg Weight:67.5 Wife:} {Birthdate: BornAt:New York City, NY Age:0 Children:[Indio Falconer Avri Roel Exton Elias] HasChildren:true HasGreyHair:false Name:Robert Downey Jr. Photo:https://jsonformatter.org/img/Robert-Downey-Jr.jpg Weight:77.1 Wife:Susan Downey}]
+    &[{Name: BornAt: Photo:https://jsonformatter.org/img/tom-cruise.jpg Wife: Weight:67.5 HasChildren:true Children:[Suri Isabella Jane Connor] Age:56 Birthdate:July 3, 1962 HasGreyHair:false} {Name:Robert Downey Jr. BornAt:New York City, NY Photo:https://jsonformatter.org/img/Robert-Downey-Jr.jpg Wife:Susan Downey Weight:77.1 HasChildren:true Children:[Indio Falconer Avri Roel Exton Elias] Age:0 Birthdate: HasGreyHair:false}]
 - name: union object array include different type array
   input: |-
       [
@@ -227,16 +227,16 @@
       ]
   expected: |-
     []struct {
-    	Birthdate   string  `json:"Birthdate"`
-    	BornAt      string  `json:"Born At"`
+    	Name        string  `json:"name"`
     	Age         int     `json:"age"`
-    	Children    []any   `json:"children"`
+    	BornAt      string  `json:"Born At"`
+    	Birthdate   string  `json:"Birthdate"`
+    	Photo       string  `json:"photo"`
+    	Wife        string  `json:"wife"`
+    	Weight      float64 `json:"weight"`
     	HasChildren bool    `json:"hasChildren"`
     	HasGreyHair bool    `json:"hasGreyHair"`
-    	Name        string  `json:"name"`
-    	Photo       string  `json:"photo"`
-    	Weight      float64 `json:"weight"`
-    	Wife        string  `json:"wife"`
+    	Children    []any   `json:"children"`
     }
   unmarshal: |-
-    &[{Birthdate:July 3, 1962 BornAt:Syracuse, NY Age:56 Children:[100] HasChildren:true HasGreyHair:false Name:Tom Cruise Photo:https://jsonformatter.org/img/tom-cruise.jpg Weight:67.5 Wife:} {Birthdate:April 4, 1965 BornAt:New York City, NY Age:53 Children:[Indio Falconer Avri Roel Exton Elias] HasChildren:true HasGreyHair:false Name:Robert Downey Jr. Photo:https://jsonformatter.org/img/Robert-Downey-Jr.jpg Weight:77.1 Wife:Susan Downey}]
+    &[{Name:Tom Cruise Age:56 BornAt:Syracuse, NY Birthdate:July 3, 1962 Photo:https://jsonformatter.org/img/tom-cruise.jpg Wife: Weight:67.5 HasChildren:true HasGreyHair:false Children:[100]} {Name:Robert Downey Jr. Age:53 BornAt:New York City, NY Birthdate:April 4, 1965 Photo:https://jsonformatter.org/img/Robert-Downey-Jr.jpg Wife:Susan Downey Weight:77.1 HasChildren:true HasGreyHair:false Children:[Indio Falconer Avri Roel Exton Elias]}]

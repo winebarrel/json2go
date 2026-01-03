@@ -28,28 +28,28 @@
   expected: |-
     struct {
     	Glossary struct {
+    		Title    string `json:"title"`
     		GlossDiv struct {
+    			Title     string `json:"title"`
     			GlossList struct {
     				GlossEntry struct {
-    					Abbrev   string `json:"Abbrev"`
-    					Acronym  string `json:"Acronym"`
-    					GlossDef struct {
-    						GlossSeeAlso []string `json:"GlossSeeAlso"`
-    						Para         string   `json:"para"`
-    					} `json:"GlossDef"`
-    					GlossSee  string `json:"GlossSee"`
-    					GlossTerm string `json:"GlossTerm"`
     					ID        string `json:"ID"`
     					SortAs    string `json:"SortAs"`
+    					GlossTerm string `json:"GlossTerm"`
+    					Acronym   string `json:"Acronym"`
+    					Abbrev    string `json:"Abbrev"`
+    					GlossDef  struct {
+    						Para         string   `json:"para"`
+    						GlossSeeAlso []string `json:"GlossSeeAlso"`
+    					} `json:"GlossDef"`
+    					GlossSee string `json:"GlossSee"`
     				} `json:"GlossEntry"`
     			} `json:"GlossList"`
-    			Title string `json:"title"`
     		} `json:"GlossDiv"`
-    		Title string `json:"title"`
     	} `json:"glossary"`
     }
   unmarshal: |-
-    &{Glossary:{GlossDiv:{GlossList:{GlossEntry:{Abbrev:ISO 8879:1986 Acronym:SGML GlossDef:{GlossSeeAlso:[GML XML] Para:A meta-markup language, used to create markup languages such as DocBook.} GlossSee:markup GlossTerm:Standard Generalized Markup Language ID:SGML SortAs:SGML}} Title:S} Title:example glossary}}
+    &{Glossary:{Title:example glossary GlossDiv:{Title:S GlossList:{GlossEntry:{ID:SGML SortAs:SGML GlossTerm:Standard Generalized Markup Language Acronym:SGML Abbrev:ISO 8879:1986 GlossDef:{Para:A meta-markup language, used to create markup languages such as DocBook. GlossSeeAlso:[GML XML]} GlossSee:markup}}}}}
 - name: object 2
   input: |-
     {
@@ -91,20 +91,20 @@
   expected: |-
     struct {
     	Actors []struct {
-    		Birthdate   string   `json:"Birthdate"`
-    		BornAt      string   `json:"Born At"`
+    		Name        string   `json:"name"`
     		Age         int      `json:"age"`
-    		Children    []string `json:"children"`
+    		BornAt      string   `json:"Born At"`
+    		Birthdate   string   `json:"Birthdate"`
+    		Photo       string   `json:"photo"`
+    		Wife        string   `json:"wife"`
+    		Weight      float64  `json:"weight"`
     		HasChildren bool     `json:"hasChildren"`
     		HasGreyHair bool     `json:"hasGreyHair"`
-    		Name        string   `json:"name"`
-    		Photo       string   `json:"photo"`
-    		Weight      float64  `json:"weight"`
-    		Wife        string   `json:"wife"`
+    		Children    []string `json:"children"`
     	} `json:"Actors"`
     }
   unmarshal: |-
-    &{Actors:[{Birthdate:July 3, 1962 BornAt:Syracuse, NY Age:56 Children:[Suri Isabella Jane Connor] HasChildren:true HasGreyHair:false Name:Tom Cruise Photo:https://jsonformatter.org/img/tom-cruise.jpg Weight:67.5 Wife:} {Birthdate:April 4, 1965 BornAt:New York City, NY Age:53 Children:[Indio Falconer Avri Roel Exton Elias] HasChildren:true HasGreyHair:false Name:Robert Downey Jr. Photo:https://jsonformatter.org/img/Robert-Downey-Jr.jpg Weight:77.1 Wife:Susan Downey}]}
+    &{Actors:[{Name:Tom Cruise Age:56 BornAt:Syracuse, NY Birthdate:July 3, 1962 Photo:https://jsonformatter.org/img/tom-cruise.jpg Wife: Weight:67.5 HasChildren:true HasGreyHair:false Children:[Suri Isabella Jane Connor]} {Name:Robert Downey Jr. Age:53 BornAt:New York City, NY Birthdate:April 4, 1965 Photo:https://jsonformatter.org/img/Robert-Downey-Jr.jpg Wife:Susan Downey Weight:77.1 HasChildren:true HasGreyHair:false Children:[Indio Falconer Avri Roel Exton Elias]}]}
 - name: object array
   input: |-
       [
@@ -143,19 +143,19 @@
       ]
   expected: |-
     []struct {
-    	Birthdate   string   `json:"Birthdate"`
-    	BornAt      string   `json:"Born At"`
+    	Name        string   `json:"name"`
     	Age         int      `json:"age"`
-    	Children    []string `json:"children"`
+    	BornAt      string   `json:"Born At"`
+    	Birthdate   string   `json:"Birthdate"`
+    	Photo       string   `json:"photo"`
+    	Wife        string   `json:"wife"`
+    	Weight      float64  `json:"weight"`
     	HasChildren bool     `json:"hasChildren"`
     	HasGreyHair bool     `json:"hasGreyHair"`
-    	Name        string   `json:"name"`
-    	Photo       string   `json:"photo"`
-    	Weight      float64  `json:"weight"`
-    	Wife        string   `json:"wife"`
+    	Children    []string `json:"children"`
     }
   unmarshal: |-
-    &[{Birthdate:July 3, 1962 BornAt:Syracuse, NY Age:56 Children:[Suri Isabella Jane Connor] HasChildren:true HasGreyHair:false Name:Tom Cruise Photo:https://jsonformatter.org/img/tom-cruise.jpg Weight:67.5 Wife:} {Birthdate:April 4, 1965 BornAt:New York City, NY Age:53 Children:[Indio Falconer Avri Roel Exton Elias] HasChildren:true HasGreyHair:false Name:Robert Downey Jr. Photo:https://jsonformatter.org/img/Robert-Downey-Jr.jpg Weight:77.1 Wife:Susan Downey}]
+    &[{Name:Tom Cruise Age:56 BornAt:Syracuse, NY Birthdate:July 3, 1962 Photo:https://jsonformatter.org/img/tom-cruise.jpg Wife: Weight:67.5 HasChildren:true HasGreyHair:false Children:[Suri Isabella Jane Connor]} {Name:Robert Downey Jr. Age:53 BornAt:New York City, NY Birthdate:April 4, 1965 Photo:https://jsonformatter.org/img/Robert-Downey-Jr.jpg Wife:Susan Downey Weight:77.1 HasChildren:true HasGreyHair:false Children:[Indio Falconer Avri Roel Exton Elias]}]
 - name: empty object
   input: |-
     {}

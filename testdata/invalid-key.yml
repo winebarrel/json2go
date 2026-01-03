@@ -22,12 +22,12 @@
     }
   expected: |-
     struct {
-    	NAMING_FIELD  int    `json:"(*+"`
+    	NAMING_FIELD  string `json:"_?"`
     	NAMING_FIELD0 bool   `json:"?$)"`
-    	NAMING_FIELD1 string `json:"_?"`
+    	NAMING_FIELD1 int    `json:"(*+"`
     }
   unmarshal: |-
-    &{NAMING_FIELD:9 NAMING_FIELD0:false NAMING_FIELD1:a}
+    &{NAMING_FIELD:a NAMING_FIELD0:false NAMING_FIELD1:9}
 - name: duplicate key
   input: |-
     {
