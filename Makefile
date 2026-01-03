@@ -20,7 +20,3 @@ testacc:
 .PHONY: lint
 lint:
 	golangci-lint run
-
-.PHONY: gen
-gen:
-	go generate
