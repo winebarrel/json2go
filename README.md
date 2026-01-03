@@ -87,7 +87,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/winebarrel/json2go"
+	"github.com/winebarrel/json2go/v2"
 )
 
 func main() {

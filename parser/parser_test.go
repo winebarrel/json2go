@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/winebarrel/json2go/parser"
+	"github.com/winebarrel/json2go/v2/parser"
 )
 
 func TestParseJSON_ParseErr(t *testing.T) {

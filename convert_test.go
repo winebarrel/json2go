@@ -13,7 +13,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/winebarrel/json2go"
+	"github.com/winebarrel/json2go/v2"
 	"go.yaml.in/yaml/v4"
 )
 

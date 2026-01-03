@@ -7,7 +7,7 @@ import (
 	"os"
 
 	"github.com/alecthomas/kong"
-	"github.com/winebarrel/json2go"
+	"github.com/winebarrel/json2go/v2"
 )
 
 var version string
