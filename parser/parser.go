@@ -22,6 +22,16 @@ type JsonObject struct {
 	Members []*JsonObjectMember `parser:"'{' @@* '}'"`
 }
 
+func (obj *JsonObject) Map() *OrderedMap {
+	om := newOrderedMap()
+
+	for _, m := range obj.Members {
+		om.Set(m.Key, m.Value)
+	}
+
+	return om
+}
+
 type JsonObjectMember struct {
 	Key   string     `parser:"@string"`
 	Value *JsonValue `parser:"@@"`

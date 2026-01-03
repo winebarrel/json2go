@@ -56,24 +56,24 @@ Flags:
 // json2go example.json # or `cat example.json | json2go`
 struct {
 	Glossary struct {
+		Title    string `json:"title"`
 		GlossDiv struct {
+			Title     string `json:"title"`
 			GlossList struct {
 				GlossEntry struct {
-					Abbrev   string `json:"Abbrev"`
-					Acronym  string `json:"Acronym"`
-					GlossDef struct {
-						GlossSeeAlso []string `json:"GlossSeeAlso"`
-						Para         string   `json:"para"`
-					} `json:"GlossDef"`
-					GlossSee  string `json:"GlossSee"`
-					GlossTerm string `json:"GlossTerm"`
 					ID        string `json:"ID"`
 					SortAs    string `json:"SortAs"`
+					GlossTerm string `json:"GlossTerm"`
+					Acronym   string `json:"Acronym"`
+					Abbrev    string `json:"Abbrev"`
+					GlossDef  struct {
+						Para         string   `json:"para"`
+						GlossSeeAlso []string `json:"GlossSeeAlso"`
+					} `json:"GlossDef"`
+					GlossSee string `json:"GlossSee"`
 				} `json:"GlossEntry"`
 			} `json:"GlossList"`
-			Title string `json:"title"`
 		} `json:"GlossDiv"`
-		Title string `json:"title"`
 	} `json:"glossary"`
 }
 ```

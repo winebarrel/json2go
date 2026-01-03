@@ -8,9 +8,6 @@ import (
 	"github.com/winebarrel/json2go/parser"
 )
 
-func ptr[T any](v T) *T {
-	return &v
-}
 func TestParseJSON_ParseErr(t *testing.T) {
 	_, err := parser.ParseJSON("", []byte(`{`))
 	assert.ErrorContains(t, err, `1:2: unexpected token "<EOF>" (expected "}")`)

@@ -2,33 +2,33 @@ package json2go
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"go/format"
 	"io"
-	"maps"
-	"slices"
 	"strconv"
 	"strings"
 	"unicode"
+
+	"github.com/winebarrel/json2go/parser"
 )
 
 func Convert(src []byte) ([]byte, error) {
+	return ConvertWithFilename("", src)
+}
+
+func ConvertWithFilename(filename string, src []byte) ([]byte, error) {
 	if len(bytes.TrimSpace(src)) == 0 {
 		return []byte{}, nil
 	}
 
-	decoder := json.NewDecoder(bytes.NewReader(src))
-	decoder.UseNumber()
-	var x any
-	err := decoder.Decode(&x)
+	v, err := parser.ParseJSON(filename, src)
 
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse json: %w", err)
 	}
 
 	var buf bytes.Buffer
-	convert0(x, &buf)
+	convert0(v, &buf)
 	out, err := format.Source(buf.Bytes())
 
 	if err != nil {
@@ -38,52 +38,49 @@ func Convert(src []byte) ([]byte, error) {
 	return out, nil
 }
 
-func convert0(x any, w io.Writer) {
-	switch v := x.(type) {
-	case string:
+func convert0(v *parser.JsonValue, w io.Writer) {
+	if v.String != nil {
 		w.Write([]byte("string"))
-	case bool:
+	} else if v.False != nil || v.True != nil {
 		w.Write([]byte("bool"))
-	case json.Number:
-		if strings.Contains(v.String(), ".") {
+	} else if v.Number != nil {
+		if strings.Contains(*v.Number, ".") {
 			w.Write([]byte("float64"))
 		} else {
 			w.Write([]byte("int"))
 		}
-	case []any:
-		convertArray(v, w)
-	case map[string]any:
-		convertObject(v, w)
-	default:
+	} else if v.Array != nil {
+		convertArray(v.Array, w)
+	} else if v.Object != nil {
+		convertObject(v.Object, w)
+	} else {
 		w.Write([]byte("any"))
 	}
 }
 
-func convertArray(a []any, w io.Writer) {
-	if len(a) == 0 {
+func convertArray(a *parser.JsonArray, w io.Writer) {
+	if len(a.Elements) == 0 {
 		w.Write([]byte("[]any"))
 		return
 	}
 
-	maps := []map[string]any{}
+	objs := []*parser.JsonObject{}
 
-	for _, x := range a {
-		m, ok := x.(map[string]any)
-
-		if ok {
-			maps = append(maps, m)
+	for _, x := range a.Elements {
+		if x.Object != nil {
+			objs = append(objs, x.Object)
 		}
 	}
 
-	if len(a) == len(maps) {
-		convertObjectArray(maps, w)
+	if len(a.Elements) == len(objs) {
+		convertObjectArray(objs, w)
 		return
 	}
 
 	w.Write([]byte("[]"))
 	base := ""
 
-	for _, x := range a {
+	for _, x := range a.Elements {
 		var buf bytes.Buffer
 		convert0(x, &buf)
 		t := buf.String()
@@ -99,21 +96,23 @@ func convertArray(a []any, w io.Writer) {
 	w.Write([]byte(base))
 }
 
-func convertObjectArray(a []map[string]any, w io.Writer) {
-	union := a[0]
+func convertObjectArray(a []*parser.JsonObject, w io.Writer) {
+	union := a[0].Map()
 	a = a[1:]
 
-	for _, m := range a {
-		for k := range m {
-			v, ok := union[k]
+	for _, obj := range a {
+		m := obj.Map()
+
+		for k, v := range m.Entries() {
+			uv, ok := union.Get(k)
 
 			if !ok {
 				continue
 			}
 
 			var buf1, buf2 bytes.Buffer
-			convert0(v, &buf1)
-			convert0(m[k], &buf2)
+			convert0(uv, &buf1)
+			convert0(v, &buf2)
 			t1 := buf1.String()
 			t2 := buf2.String()
 
@@ -122,33 +121,27 @@ func convertObjectArray(a []map[string]any, w io.Writer) {
 			}
 
 			if strings.HasPrefix(t1, "[]") && strings.HasPrefix(t2, "[]") {
-				union[k] = []any{}
+				union.Set(k, &parser.JsonValue{Array: &parser.JsonArray{}}) // []any
 			} else {
-				union[k] = nil // any
+				null := "null"
+				union.Set(k, &parser.JsonValue{Null: &null}) // []any
 			}
 		}
 
-		maps.Copy(m, union)
+		m.Merge(union)
 		union = m
 	}
 
 	w.Write([]byte("[]"))
-	convertObject(union, w)
+	convertObject(union.Object(), w)
 }
 
-func convertObject(m map[string]any, w io.Writer) {
+func convertObject(obj *parser.JsonObject, w io.Writer) {
 	w.Write([]byte("struct {\n"))
 	fields := map[string]int{}
-	keys := []string{}
 
-	for k := range m {
-		keys = append(keys, k)
-	}
-
-	slices.Sort(keys)
-
-	for _, n := range keys {
-		f := convertKey(n)
+	for _, m := range obj.Members {
+		f := convertKey(m.Key)
 
 		if f == "" {
 			f = "NAMING_FIELD"
@@ -165,9 +158,9 @@ func convertObject(m map[string]any, w io.Writer) {
 		}
 
 		w.Write([]byte(" "))
-		convert0(m[n], w)
+		convert0(m.Value, w)
 		w.Write([]byte(" `json:\""))
-		w.Write([]byte(n))
+		w.Write([]byte(m.Key))
 		w.Write([]byte("\"`\n"))
 	}
 
