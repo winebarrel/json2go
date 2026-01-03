@@ -89,7 +89,8 @@ func TestOrderedMapMerge(t *testing.T) {
 	assert.Equal(t, expected, members)
 }
 
-func TestOrderdMapObject(t *testing.T) {
+
+func TestOrderedMapObject(t *testing.T) {
 	json := `{"str":"s","num":1,"t":true,"f":false,"null":null}`
 	obj, err := parser.ParseJSON("", []byte(json))
 	require.NoError(t, err)
