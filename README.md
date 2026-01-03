@@ -8,7 +8,7 @@ json2go is a tool to convert JSON to Go struct.
 ## Installation
 
 ```
-go install github.com/winebarrel/json2go/cmd/json2go@latest
+brew install winebarrel/json2go/json2go
 ```
 
 ## Usage
