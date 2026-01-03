@@ -43,3 +43,32 @@
     }
   unmarshal: |-
     &{Num1Foo:b Num1Foo0:true Num1Foo1:80}
+- name: kanji
+  input: |-
+    {
+      "名前": "山田 太郎",
+      "年齢": 30,
+      "メールアドレス": "taro.yamada@example.com",
+      "アクティブ": true,
+      "趣味": ["読書", "プログラミング", "旅行"],
+      "住所": {
+        "郵便番号": "100-0001",
+        "都道府県": "東京都",
+        "市区町村": "千代田区"
+      }
+    }
+  expected: |-
+    struct {
+    	NAMING_FIELD  string   `json:"名前"`
+    	NAMING_FIELD0 int      `json:"年齢"`
+    	NAMING_FIELD1 string   `json:"メールアドレス"`
+    	NAMING_FIELD2 bool     `json:"アクティブ"`
+    	NAMING_FIELD3 []string `json:"趣味"`
+    	NAMING_FIELD4 struct {
+    		NAMING_FIELD  string `json:"郵便番号"`
+    		NAMING_FIELD0 string `json:"都道府県"`
+    		NAMING_FIELD1 string `json:"市区町村"`
+    	} `json:"住所"`
+    }
+  unmarshal: |-
+    &{NAMING_FIELD:山田 太郎 NAMING_FIELD0:30 NAMING_FIELD1:taro.yamada@example.com NAMING_FIELD2:true NAMING_FIELD3:[読書 プログラミング 旅行] NAMING_FIELD4:{NAMING_FIELD:100-0001 NAMING_FIELD0:東京都 NAMING_FIELD1:千代田区}}
