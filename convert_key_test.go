@@ -7,7 +7,7 @@ import (
 	"github.com/winebarrel/json2go/v2"
 )
 
-func TestNameToField(t *testing.T) {
+func TesConvertKey(t *testing.T) {
 	tests := []struct {
 		input    string
 		expected string
