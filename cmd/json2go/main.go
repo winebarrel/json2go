@@ -17,26 +17,17 @@ func init() {
 }
 
 type options struct {
-	BodyFile kong.FileContentFlag `arg:"" optional:"" type:"filecontent" xor:"stdin" help:"JSON file. If not specified, read from stdin."`
-	Version  kong.VersionFlag
+	File    string `arg:"" optional:"" help:"JSON file. If not specified, read from stdin."`
+	Version kong.VersionFlag
 }
 
 func parseArgs() *options {
 	opts := &options{}
 	parser := kong.Must(opts, kong.Vars{"version": version})
 	parser.Model.HelpFlag.Help = "Show help."
-	args := os.Args[1:]
 
-	if _, err := parser.Parse(args); err != nil {
+	if _, err := parser.Parse(os.Args[1:]); err != nil {
 		parser.FatalIfErrorf(err)
-	}
-
-	if len(args) == 0 {
-		if stdin, err := io.ReadAll(os.Stdin); err != nil {
-			parser.FatalIfErrorf(err)
-		} else {
-			opts.BodyFile = stdin
-		}
 	}
 
 	return opts
@@ -44,7 +35,22 @@ func parseArgs() *options {
 
 func main() {
 	opts := parseArgs()
-	out, err := json2go.Convert(opts.BodyFile)
+	filename := opts.File
+	var data []byte
+	var err error
+
+	if opts.File == "" || opts.File == "-" {
+		filename = "<stdin>"
+		data, err = io.ReadAll(os.Stdin)
+	} else {
+		data, err = os.ReadFile(opts.File)
+	}
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	out, err := json2go.ConvertWithFilename(filename, data)
 
 	if err != nil {
 		log.Fatal(err)
