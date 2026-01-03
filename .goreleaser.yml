@@ -10,3 +10,16 @@ builds:
       - CGO_ENABLED=0
 checksum:
   name_template: "checksums.txt"
+homebrew_casks:
+  - repository:
+      owner: winebarrel
+      name: homebrew-json2go
+    homepage: https://github.com/winebarrel/json2go
+    description: json2go is a tool to convert JSON to Go struct.
+    license: MIT
+    hooks:
+      post:
+        install: |
+          if OS.mac?
+            system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/json2go"]
+          end
