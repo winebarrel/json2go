@@ -8,7 +8,7 @@ import (
 	"github.com/winebarrel/json2go/parser"
 )
 
-func TestOrderdMapGet(t *testing.T) {
+func TestOrderedMapGet(t *testing.T) {
 	json := `{"str":"s","num":1,"t":true,"f":false,"null":null}`
 	obj, err := parser.ParseJSON("", []byte(json))
 	require.NoError(t, err)
@@ -32,7 +32,7 @@ func TestOrderdMapGet(t *testing.T) {
 	assert.False(t, ok)
 }
 
-func TestOrderdMapEntries(t *testing.T) {
+func TestOrderedMapEntries(t *testing.T) {
 	json := `{"str":"s","num":1,"t":true,"f":false,"null":null}`
 	obj, err := parser.ParseJSON("", []byte(json))
 	require.NoError(t, err)
