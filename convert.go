@@ -9,7 +9,7 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/winebarrel/json2go/parser"
+	"github.com/winebarrel/json2go/v2/parser"
 )
 
 func Convert(src []byte) ([]byte, error) {

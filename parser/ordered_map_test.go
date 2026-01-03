@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/winebarrel/json2go/parser"
+	"github.com/winebarrel/json2go/v2/parser"
 )
 
 func TestOrderedMapGet(t *testing.T) {
@@ -88,7 +88,6 @@ func TestOrderedMapMerge(t *testing.T) {
 
 	assert.Equal(t, expected, members)
 }
-
 
 func TestOrderedMapObject(t *testing.T) {
 	json := `{"str":"s","num":1,"t":true,"f":false,"null":null}`

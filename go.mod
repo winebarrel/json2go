@@ -1,4 +1,4 @@
-module github.com/winebarrel/json2go
+module github.com/winebarrel/json2go/v2
 
 go 1.25.5
 

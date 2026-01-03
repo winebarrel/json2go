@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/winebarrel/json2go"
+	"github.com/winebarrel/json2go/v2"
 )
 
 func TestNameToField(t *testing.T) {
