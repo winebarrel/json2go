@@ -14,10 +14,10 @@ brew install winebarrel/json2go/json2go
 ## Usage
 
 ```
-Usage: json2go [<body-file>] [flags]
+Usage: json2go [<file>] [flags]
 
 Arguments:
-  [<body-file>]    JSON file. If not specified, read from stdin.
+  [<file>]    JSON file. If not specified, read from stdin.
 
 Flags:
   -h, --help       Show help.
