@@ -35,22 +35,23 @@ func parseArgs() *options {
 
 func main() {
 	opts := parseArgs()
-	filename := opts.File
-	var data []byte
-	var err error
+	var r io.Reader
 
 	if opts.File == "" || opts.File == "-" {
-		filename = "<stdin>"
-		data, err = io.ReadAll(os.Stdin)
+		opts.File = "<stdin>"
+		r = os.Stdin
 	} else {
-		data, err = os.ReadFile(opts.File)
+		file, err := os.Open(opts.File)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		defer file.Close()
+		r = file
 	}
 
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	out, err := json2go.ConvertWithFilename(filename, data)
+	out, err := json2go.Convert(r, json2go.WithFilename(opts.File))
 
 	if err != nil {
 		log.Fatal(err)

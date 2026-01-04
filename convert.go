@@ -12,16 +12,30 @@ import (
 	"github.com/winebarrel/jsonast"
 )
 
-func Convert(src []byte) ([]byte, error) {
-	return ConvertWithFilename("", src)
-}
-
-func ConvertWithFilename(filename string, src []byte) ([]byte, error) {
-	if len(bytes.TrimSpace(src)) == 0 {
-		return []byte{}, nil
+func ConvertBytes(src []byte, optfns ...optionFunc) ([]byte, error) {
+	f := func(filename string) (*jsonast.JsonValue, error) {
+		return jsonast.ParseBytes(filename, src)
 	}
 
-	v, err := jsonast.ParseJSON(filename, src)
+	return convert(f, optfns...)
+}
+
+func Convert(r io.Reader, optfns ...optionFunc) ([]byte, error) {
+	f := func(filename string) (*jsonast.JsonValue, error) {
+		return jsonast.Parse(filename, r)
+	}
+
+	return convert(f, optfns...)
+}
+
+func convert(parse func(string) (*jsonast.JsonValue, error), optfns ...optionFunc) ([]byte, error) {
+	options := &options{}
+
+	for _, f := range optfns {
+		f(options)
+	}
+
+	v, err := parse(options.filename)
 
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse json: %w", err)

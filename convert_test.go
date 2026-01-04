@@ -17,28 +17,36 @@ import (
 	"go.yaml.in/yaml/v4"
 )
 
-func TestConvert_Empty(t *testing.T) {
+func TestConvertBytes_Empty(t *testing.T) {
 	tests := []struct {
-		input    string
-		expected string
+		input string
 	}{
-		{input: "", expected: ""},
-		{input: strings.Repeat(" ", 100), expected: ""},
+		{input: ""},
+		{input: strings.Repeat(" ", 100)},
 	}
 
 	for _, tt := range tests {
-		t.Run(tt.input+"->"+tt.expected, func(t *testing.T) {
-			raw, err := json2go.Convert([]byte(tt.input))
-			out := string(raw)
-			require.NoError(t, err)
-			assert.Equal(t, tt.expected, out)
+		t.Run(fmt.Sprintf("SPACEx%d", len(tt.input)), func(t *testing.T) {
+			_, err := json2go.ConvertBytes([]byte(tt.input))
+			require.ErrorContains(t, err, `failed to parse json: 1:1: unexpected token "<EOF>"`)
 		})
 	}
 }
 
-func TestConvert_Err(t *testing.T) {
-	_, err := json2go.Convert([]byte("invalid"))
+func TestConvertBytes_Err(t *testing.T) {
+	_, err := json2go.ConvertBytes([]byte("invalid"))
 	require.ErrorContains(t, err, "failed to parse json:")
+}
+
+func TestConvertBytes_ErrWithFilename(t *testing.T) {
+	_, err := json2go.ConvertBytes([]byte("{"), json2go.WithFilename("example.json"))
+	require.ErrorContains(t, err, `failed to parse json: example.json:1:2: unexpected token "<EOF>" (expected "}")`)
+}
+
+func TestConvert_OK(t *testing.T) {
+	v, err := json2go.Convert(strings.NewReader("null"))
+	require.NoError(t, err)
+	assert.Equal(t, []byte(`any`), v)
 }
 
 type testCase struct {
@@ -48,7 +56,7 @@ type testCase struct {
 	Unmarshal string
 }
 
-func TestConvert_OK(t *testing.T) {
+func TestConvertBytes_OK(t *testing.T) {
 	files, err := filepath.Glob("testdata/*.yml")
 
 	if err != nil {
@@ -77,7 +85,7 @@ func TestConvert_OK(t *testing.T) {
 			}
 
 			t.Run(f+"/"+name, func(t *testing.T) {
-				out, err := json2go.Convert([]byte(tt.Input))
+				out, err := json2go.ConvertBytes([]byte(tt.Input))
 				require.NoError(t, err)
 				assert.Equal(t, tt.Expected, string(out))
 

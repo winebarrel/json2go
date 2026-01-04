@@ -5,7 +5,7 @@ go 1.25.5
 require (
 	github.com/alecthomas/kong v1.13.0
 	github.com/stretchr/testify v1.11.1
-	github.com/winebarrel/jsonast v0.1.0
+	github.com/winebarrel/jsonast v0.2.0
 	go.yaml.in/yaml/v4 v4.0.0-rc.3
 )
 
