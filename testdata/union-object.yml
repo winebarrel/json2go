@@ -30,16 +30,16 @@
       ]
   expected: |-
     []struct {
-    	Age         int      `json:"age"`
-    	Birthdate   string   `json:"Birthdate"`
+    	Age         int      `json:"age,omitempty"`
+    	Birthdate   string   `json:"Birthdate,omitempty"`
     	Photo       string   `json:"photo"`
     	Weight      float64  `json:"weight"`
     	HasChildren bool     `json:"hasChildren"`
-    	HasGreyHair bool     `json:"hasGreyHair"`
+    	HasGreyHair bool     `json:"hasGreyHair,omitempty"`
     	Children    []string `json:"children"`
-    	Name        string   `json:"name"`
-    	BornAt      string   `json:"Born At"`
-    	Wife        string   `json:"wife"`
+    	Name        string   `json:"name,omitempty"`
+    	BornAt      string   `json:"Born At,omitempty"`
+    	Wife        string   `json:"wife,omitempty"`
     }
   unmarshal: |-
     &[{Age:56 Birthdate:July 3, 1962 Photo:https://jsonformatter.org/img/tom-cruise.jpg Weight:67.5 HasChildren:true HasGreyHair:false Children:[Suri Isabella Jane Connor] Name: BornAt: Wife:} {Age:0 Birthdate: Photo:https://jsonformatter.org/img/Robert-Downey-Jr.jpg Weight:77.1 HasChildren:true HasGreyHair:false Children:[Indio Falconer Avri Roel Exton Elias] Name:Robert Downey Jr. BornAt:New York City, NY Wife:Susan Downey}]
@@ -178,16 +178,16 @@
       ]
   expected: |-
     []struct {
-    	Age         int      `json:"age"`
-    	Birthdate   string   `json:"Birthdate"`
+    	Age         int      `json:"age,omitempty"`
+    	Birthdate   string   `json:"Birthdate,omitempty"`
     	Photo       string   `json:"photo"`
     	Weight      any      `json:"weight"`
     	HasChildren bool     `json:"hasChildren"`
-    	HasGreyHair bool     `json:"hasGreyHair"`
+    	HasGreyHair bool     `json:"hasGreyHair,omitempty"`
     	Children    []string `json:"children"`
-    	Name        string   `json:"name"`
-    	BornAt      string   `json:"Born At"`
-    	Wife        string   `json:"wife"`
+    	Name        string   `json:"name,omitempty"`
+    	BornAt      string   `json:"Born At,omitempty"`
+    	Wife        string   `json:"wife,omitempty"`
     }
   unmarshal: |-
     &[{Age:56 Birthdate:July 3, 1962 Photo:https://jsonformatter.org/img/tom-cruise.jpg Weight:67.5 HasChildren:true HasGreyHair:false Children:[Suri Isabella Jane Connor] Name: BornAt: Wife:} {Age:0 Birthdate: Photo:https://jsonformatter.org/img/Robert-Downey-Jr.jpg Weight:77.1 HasChildren:true HasGreyHair:false Children:[Indio Falconer Avri Roel Exton Elias] Name:Robert Downey Jr. BornAt:New York City, NY Wife:Susan Downey}]
@@ -245,7 +245,6 @@
     [
         {
             "name": "water",
-            "type": null,
             "boiling_point": {
                 "units": "C",
                 "value": 100
@@ -263,15 +262,15 @@
   expected: |-
     []struct {
     	Name         string `json:"name"`
-    	Type         any    `json:"type"`
     	BoilingPoint struct {
     		Units string `json:"units"`
     		Value int    `json:"value"`
-    	} `json:"boiling_point"`
+    	} `json:"boiling_point,omitempty"`
+    	Type    string `json:"type,omitempty"`
     	Density struct {
     		Units string  `json:"units"`
     		Value float64 `json:"value"`
-    	} `json:"density"`
+    	} `json:"density,omitempty"`
     }
   unmarshal: |-
-    &[{Name:water Type:<nil> BoilingPoint:{Units:C Value:100} Density:{Units: Value:0}} {Name:oxygen Type:gas BoilingPoint:{Units: Value:0} Density:{Units:g/L Value:1.429}}]
+    &[{Name:water BoilingPoint:{Units:C Value:100} Type: Density:{Units: Value:0}} {Name:oxygen BoilingPoint:{Units: Value:0} Type:gas Density:{Units:g/L Value:1.429}}]
