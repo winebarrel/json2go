@@ -142,8 +142,7 @@ func convertObjectArray(a []*jsonast.JsonObject, w io.Writer) {
 			}
 		}
 
-		m.Merge(union)
-		union = m
+		union.WeakMerge(m)
 	}
 
 	w.Write([]byte("[]"))

@@ -30,19 +30,19 @@
       ]
   expected: |-
     []struct {
-    	Name        string   `json:"name"`
-    	BornAt      string   `json:"Born At"`
-    	Photo       string   `json:"photo"`
-    	Wife        string   `json:"wife"`
-    	Weight      float64  `json:"weight"`
-    	HasChildren bool     `json:"hasChildren"`
-    	Children    []string `json:"children"`
     	Age         int      `json:"age"`
     	Birthdate   string   `json:"Birthdate"`
+    	Photo       string   `json:"photo"`
+    	Weight      float64  `json:"weight"`
+    	HasChildren bool     `json:"hasChildren"`
     	HasGreyHair bool     `json:"hasGreyHair"`
+    	Children    []string `json:"children"`
+    	Name        string   `json:"name"`
+    	BornAt      string   `json:"Born At"`
+    	Wife        string   `json:"wife"`
     }
   unmarshal: |-
-    &[{Name: BornAt: Photo:https://jsonformatter.org/img/tom-cruise.jpg Wife: Weight:67.5 HasChildren:true Children:[Suri Isabella Jane Connor] Age:56 Birthdate:July 3, 1962 HasGreyHair:false} {Name:Robert Downey Jr. BornAt:New York City, NY Photo:https://jsonformatter.org/img/Robert-Downey-Jr.jpg Wife:Susan Downey Weight:77.1 HasChildren:true Children:[Indio Falconer Avri Roel Exton Elias] Age:0 Birthdate: HasGreyHair:false}]
+    &[{Age:56 Birthdate:July 3, 1962 Photo:https://jsonformatter.org/img/tom-cruise.jpg Weight:67.5 HasChildren:true HasGreyHair:false Children:[Suri Isabella Jane Connor] Name: BornAt: Wife:} {Age:0 Birthdate: Photo:https://jsonformatter.org/img/Robert-Downey-Jr.jpg Weight:77.1 HasChildren:true HasGreyHair:false Children:[Indio Falconer Avri Roel Exton Elias] Name:Robert Downey Jr. BornAt:New York City, NY Wife:Susan Downey}]
 - name: union object array include any
   input: |-
       [
@@ -178,19 +178,19 @@
       ]
   expected: |-
     []struct {
-    	Name        string   `json:"name"`
-    	BornAt      string   `json:"Born At"`
-    	Photo       string   `json:"photo"`
-    	Wife        string   `json:"wife"`
-    	Weight      any      `json:"weight"`
-    	HasChildren bool     `json:"hasChildren"`
-    	Children    []string `json:"children"`
     	Age         int      `json:"age"`
     	Birthdate   string   `json:"Birthdate"`
+    	Photo       string   `json:"photo"`
+    	Weight      any      `json:"weight"`
+    	HasChildren bool     `json:"hasChildren"`
     	HasGreyHair bool     `json:"hasGreyHair"`
+    	Children    []string `json:"children"`
+    	Name        string   `json:"name"`
+    	BornAt      string   `json:"Born At"`
+    	Wife        string   `json:"wife"`
     }
   unmarshal: |-
-    &[{Name: BornAt: Photo:https://jsonformatter.org/img/tom-cruise.jpg Wife: Weight:67.5 HasChildren:true Children:[Suri Isabella Jane Connor] Age:56 Birthdate:July 3, 1962 HasGreyHair:false} {Name:Robert Downey Jr. BornAt:New York City, NY Photo:https://jsonformatter.org/img/Robert-Downey-Jr.jpg Wife:Susan Downey Weight:77.1 HasChildren:true Children:[Indio Falconer Avri Roel Exton Elias] Age:0 Birthdate: HasGreyHair:false}]
+    &[{Age:56 Birthdate:July 3, 1962 Photo:https://jsonformatter.org/img/tom-cruise.jpg Weight:67.5 HasChildren:true HasGreyHair:false Children:[Suri Isabella Jane Connor] Name: BornAt: Wife:} {Age:0 Birthdate: Photo:https://jsonformatter.org/img/Robert-Downey-Jr.jpg Weight:77.1 HasChildren:true HasGreyHair:false Children:[Indio Falconer Avri Roel Exton Elias] Name:Robert Downey Jr. BornAt:New York City, NY Wife:Susan Downey}]
 - name: union object array include different type array
   input: |-
       [
@@ -240,3 +240,38 @@
     }
   unmarshal: |-
     &[{Name:Tom Cruise Age:56 BornAt:Syracuse, NY Birthdate:July 3, 1962 Photo:https://jsonformatter.org/img/tom-cruise.jpg Wife: Weight:67.5 HasChildren:true HasGreyHair:false Children:[100]} {Name:Robert Downey Jr. Age:53 BornAt:New York City, NY Birthdate:April 4, 1965 Photo:https://jsonformatter.org/img/Robert-Downey-Jr.jpg Wife:Susan Downey Weight:77.1 HasChildren:true HasGreyHair:false Children:[Indio Falconer Avri Roel Exton Elias]}]
+- name: merge object
+  input: |-
+    [
+        {
+            "name": "water",
+            "type": null,
+            "boiling_point": {
+                "units": "C",
+                "value": 100
+            }
+        },
+        {
+            "name": "oxygen",
+            "type": "gas",
+            "density": {
+                "units": "g/L",
+                "value": 1.429
+            }
+        }
+      ]
+  expected: |-
+    []struct {
+    	Name         string `json:"name"`
+    	Type         any    `json:"type"`
+    	BoilingPoint struct {
+    		Units string `json:"units"`
+    		Value int    `json:"value"`
+    	} `json:"boiling_point"`
+    	Density struct {
+    		Units string  `json:"units"`
+    		Value float64 `json:"value"`
+    	} `json:"density"`
+    }
+  unmarshal: |-
+    &[{Name:water Type:<nil> BoilingPoint:{Units:C Value:100} Density:{Units: Value:0}} {Name:oxygen Type:gas BoilingPoint:{Units: Value:0} Density:{Units:g/L Value:1.429}}]

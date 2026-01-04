@@ -55,24 +55,24 @@ func TestOrderedMapEntries(t *testing.T) {
 	assert.Equal(t, expected, members)
 }
 
-func TestOrderedMapMerge(t *testing.T) {
+func TestOrderedMapWeakMerge(t *testing.T) {
 	var om1, om2 *json2go.OrderedMap
 
 	{
-		json := `{"str":"s1","num":1,"f":false}`
+		json := `{"str":"s1","num":1,"f":false,"x":null}`
 		obj, err := jsonast.ParseBytes("", []byte(json))
 		require.NoError(t, err)
 		om1 = json2go.OrderedMapFrom(obj.Object)
 	}
 
 	{
-		json := `{"str":"s2","t":true,"null":null}`
+		json := `{"str":"s2","t":true,"null":null,"x":100}`
 		obj, err := jsonast.ParseBytes("", []byte(json))
 		require.NoError(t, err)
 		om2 = json2go.OrderedMapFrom(obj.Object)
 	}
 
-	om1.Merge(om2)
+	om1.WeakMerge(om2)
 	members := []*jsonast.JsonObjectMember{}
 
 	for k, v := range om1.Entries() {
@@ -80,13 +80,13 @@ func TestOrderedMapMerge(t *testing.T) {
 	}
 
 	expected := []*jsonast.JsonObjectMember{
-		{Key: "str", Value: &jsonast.JsonValue{String: ptr("s2")}},
+		{Key: "str", Value: &jsonast.JsonValue{String: ptr("s1")}},
 		{Key: "num", Value: &jsonast.JsonValue{Number: ptr("1")}},
 		{Key: "f", Value: &jsonast.JsonValue{False: ptr("false")}},
+		{Key: "x", Value: &jsonast.JsonValue{Null: ptr("null")}},
 		{Key: "t", Value: &jsonast.JsonValue{True: ptr("true")}},
 		{Key: "null", Value: &jsonast.JsonValue{Null: ptr("null")}},
 	}
-
 	assert.Equal(t, expected, members)
 }
 
