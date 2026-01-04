@@ -11,7 +11,7 @@ import (
 
 func TestOrderedMapGet(t *testing.T) {
 	json := `{"str":"s","num":1,"t":true,"f":false,"null":null}`
-	obj, err := jsonast.ParseJSON("", []byte(json))
+	obj, err := jsonast.ParseBytes("", []byte(json))
 	require.NoError(t, err)
 	om := json2go.OrderedMapFrom(obj.Object)
 
@@ -35,7 +35,7 @@ func TestOrderedMapGet(t *testing.T) {
 
 func TestOrderedMapEntries(t *testing.T) {
 	json := `{"str":"s","num":1,"t":true,"f":false,"null":null}`
-	obj, err := jsonast.ParseJSON("", []byte(json))
+	obj, err := jsonast.ParseBytes("", []byte(json))
 	require.NoError(t, err)
 	om := json2go.OrderedMapFrom(obj.Object)
 	members := []*jsonast.JsonObjectMember{}
@@ -60,14 +60,14 @@ func TestOrderedMapMerge(t *testing.T) {
 
 	{
 		json := `{"str":"s1","num":1,"f":false}`
-		obj, err := jsonast.ParseJSON("", []byte(json))
+		obj, err := jsonast.ParseBytes("", []byte(json))
 		require.NoError(t, err)
 		om1 = json2go.OrderedMapFrom(obj.Object)
 	}
 
 	{
 		json := `{"str":"s2","t":true,"null":null}`
-		obj, err := jsonast.ParseJSON("", []byte(json))
+		obj, err := jsonast.ParseBytes("", []byte(json))
 		require.NoError(t, err)
 		om2 = json2go.OrderedMapFrom(obj.Object)
 	}
@@ -92,7 +92,7 @@ func TestOrderedMapMerge(t *testing.T) {
 
 func TestOrderedMapObject(t *testing.T) {
 	json := `{"str":"s","num":1,"t":true,"f":false,"null":null}`
-	obj, err := jsonast.ParseJSON("", []byte(json))
+	obj, err := jsonast.ParseBytes("", []byte(json))
 	require.NoError(t, err)
 	om := json2go.OrderedMapFrom(obj.Object)
 	expected := &jsonast.JsonObject{Members: []*jsonast.JsonObjectMember{
