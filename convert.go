@@ -168,7 +168,7 @@ func convertObject(obj *jsonast.JsonObject, w io.Writer) {
 			w.Write([]byte(strconv.Itoa(num)))
 			fields[f] = num + 1
 		} else {
-			fields[f] = 0
+			fields[f] = 2
 		}
 
 		w.Write([]byte(" "))
