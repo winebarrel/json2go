@@ -112,12 +112,12 @@ func convertArray(a *jsonast.JsonArray, w io.Writer) {
 }
 
 func convertObjectArray(a []*jsonast.JsonObject, w io.Writer) {
-	union, omitempty := mergeObjectArray(a...)
+	union, omitempty := mergeObjectArray(a)
 	w.Write([]byte("[]"))
 	convertObject(union, w, omitempty)
 }
 
-func mergeObjectArray(a ...*jsonast.JsonObject) (*jsonast.JsonObject, map[string]struct{}) {
+func mergeObjectArray(a []*jsonast.JsonObject) (*jsonast.JsonObject, map[string]struct{}) {
 	union := orderedMapFrom(a[0])
 	a = a[1:]
 	omitempty := map[string]struct{}{}
@@ -134,7 +134,7 @@ func mergeObjectArray(a ...*jsonast.JsonObject) (*jsonast.JsonObject, map[string
 			}
 
 			if uv.Object != nil && v.Object != nil {
-				uv.Object, _ = mergeObjectArray(uv.Object, v.Object)
+				uv.Object, _ = mergeObjectArray([]*jsonast.JsonObject{uv.Object, v.Object})
 				continue
 			}
 
@@ -148,7 +148,17 @@ func mergeObjectArray(a ...*jsonast.JsonObject) (*jsonast.JsonObject, map[string
 				continue
 			}
 
-			if strings.HasPrefix(t1, "[]") && strings.HasPrefix(t2, "[]") {
+			if strings.HasPrefix(t1, "[]struct") && strings.HasPrefix(t2, "[]struct") {
+				objary := []*jsonast.JsonObject{}
+				for _, e := range uv.Array.Elements {
+					objary = append(objary, e.Object)
+				}
+				for _, e := range v.Array.Elements {
+					objary = append(objary, e.Object)
+				}
+				merged, _ := mergeObjectArray(objary)
+				uv.Array = &jsonast.JsonArray{Elements: []*jsonast.JsonValue{{Object: merged}}}
+			} else if strings.HasPrefix(t1, "[]") && strings.HasPrefix(t2, "[]") {
 				union.Set(k, &jsonast.JsonValue{Array: &jsonast.JsonArray{}}) // []any
 			} else {
 				null := "null"
