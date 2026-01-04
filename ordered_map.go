@@ -64,3 +64,21 @@ func (m *orderedMap) Object() *jsonast.JsonObject {
 
 	return &jsonast.JsonObject{Members: members}
 }
+
+func (m *orderedMap) XorKeys(other *orderedMap) map[string]struct{} {
+	keys := map[string]struct{}{}
+
+	for _, k := range m.keys {
+		if _, ok := other.Get(k); !ok {
+			keys[k] = struct{}{}
+		}
+	}
+
+	for _, k := range other.keys {
+		if _, ok := m.Get(k); !ok {
+			keys[k] = struct{}{}
+		}
+	}
+
+	return keys
+}

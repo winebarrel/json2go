@@ -104,3 +104,25 @@ func TestOrderedMapObject(t *testing.T) {
 	}}
 	assert.Equal(t, expected, om.Object())
 }
+
+func TestOrderedMapXorKeys(t *testing.T) {
+	var om1, om2 *json2go.OrderedMap
+
+	{
+		json := `{"str":"s1","num":1,"f":false,"x":null}`
+		obj, err := jsonast.ParseBytes("", []byte(json))
+		require.NoError(t, err)
+		om1 = json2go.OrderedMapFrom(obj.Object)
+	}
+
+	{
+		json := `{"str":"s2","t":true,"null":null,"x":100}`
+		obj, err := jsonast.ParseBytes("", []byte(json))
+		require.NoError(t, err)
+		om2 = json2go.OrderedMapFrom(obj.Object)
+	}
+
+	expected := map[string]struct{}{"f": {}, "null": {}, "num": {}, "t": {}}
+	assert.Equal(t, expected, om1.XorKeys(om2))
+	assert.Equal(t, expected, om2.XorKeys(om1))
+}

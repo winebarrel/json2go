@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"go/format"
 	"io"
+	"maps"
 	"strconv"
 	"strings"
 	"unicode"
@@ -66,7 +67,7 @@ func convert0(v *jsonast.JsonValue, w io.Writer) {
 	} else if v.Array != nil {
 		convertArray(v.Array, w)
 	} else if v.Object != nil {
-		convertObject(v.Object, w)
+		convertObject(v.Object, w, nil)
 	} else {
 		w.Write([]byte("any"))
 	}
@@ -113,6 +114,7 @@ func convertArray(a *jsonast.JsonArray, w io.Writer) {
 func convertObjectArray(a []*jsonast.JsonObject, w io.Writer) {
 	union := orderedMapFrom(a[0])
 	a = a[1:]
+	omitempty := map[string]struct{}{}
 
 	for _, obj := range a {
 		m := orderedMapFrom(obj)
@@ -142,14 +144,19 @@ func convertObjectArray(a []*jsonast.JsonObject, w io.Writer) {
 			}
 		}
 
+		maps.Copy(omitempty, union.XorKeys(m))
 		union.WeakMerge(m)
 	}
 
 	w.Write([]byte("[]"))
-	convertObject(union.Object(), w)
+	convertObject(union.Object(), w, omitempty)
 }
 
-func convertObject(obj *jsonast.JsonObject, w io.Writer) {
+func convertObject(obj *jsonast.JsonObject, w io.Writer, omitempty map[string]struct{}) {
+	if omitempty == nil {
+		omitempty = map[string]struct{}{}
+	}
+
 	w.Write([]byte("struct {\n"))
 	fields := map[string]int{}
 
@@ -174,6 +181,9 @@ func convertObject(obj *jsonast.JsonObject, w io.Writer) {
 		convert0(m.Value, w)
 		w.Write([]byte(" `json:\""))
 		w.Write([]byte(m.Key))
+		if _, ok := omitempty[m.Key]; ok {
+			w.Write([]byte(",omitempty"))
+		}
 		w.Write([]byte("\"`\n"))
 	}
 
