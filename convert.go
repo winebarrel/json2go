@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"go/format"
 	"io"
-	"maps"
 	"strconv"
 	"strings"
 	"unicode"
@@ -54,131 +53,48 @@ func convert(parse func(string) (*jsonast.JsonValue, error), optfns ...optionFun
 }
 
 func convert0(v *jsonast.JsonValue, w io.Writer) {
-	if v.String != nil {
+	switch value := v.Value().(type) {
+	case *jsonast.JsonString:
 		w.Write([]byte("string"))
-	} else if v.False != nil || v.True != nil {
+	case *jsonast.JsonTrue, *jsonast.JsonFalse:
 		w.Write([]byte("bool"))
-	} else if v.Number != nil {
-		if strings.Contains(*v.Number, ".") {
+	case *jsonast.JsonNumber:
+		if strings.Contains(value.String(), ".") {
 			w.Write([]byte("float64"))
 		} else {
 			w.Write([]byte("int"))
 		}
-	} else if v.Array != nil {
-		convertArray(v.Array, w)
-	} else if v.Object != nil {
-		convertObject(v.Object, w, nil)
-	} else {
+	case *jsonast.JsonArray:
+		convertArray(value, w)
+	case *jsonast.JsonObject:
+		convertObject(value, w)
+	default:
 		w.Write([]byte("any"))
 	}
 }
 
 func convertArray(a *jsonast.JsonArray, w io.Writer) {
-	if len(a.Elements) == 0 {
+	if a.Len() == 0 {
 		w.Write([]byte("[]any"))
 		return
 	}
 
-	objs := []*jsonast.JsonObject{}
-
-	for _, x := range a.Elements {
-		if x.Object != nil {
-			objs = append(objs, x.Object)
-		}
-	}
-
-	if len(a.Elements) == len(objs) {
-		convertObjectArray(objs, w)
-		return
-	}
+	elem := a.UnionType(nil).Array.Elements[0]
+	var base bytes.Buffer
+	convert0(elem, &base)
 
 	w.Write([]byte("[]"))
-	base := ""
-
-	for _, x := range a.Elements {
-		var buf bytes.Buffer
-		convert0(x, &buf)
-		t := buf.String()
-
-		if t == "any" || (base != "" && base != t) {
-			base = "any"
-			break
-		}
-
-		base = t
-	}
-
-	w.Write([]byte(base))
+	w.Write(base.Bytes())
 }
 
-func convertObjectArray(a []*jsonast.JsonObject, w io.Writer) {
-	union, omitempty := mergeObjectArray(a)
-	w.Write([]byte("[]"))
-	convertObject(union, w, omitempty)
-}
-
-func mergeObjectArray(a []*jsonast.JsonObject) (*jsonast.JsonObject, map[string]struct{}) {
-	union := orderedMapFrom(a[0])
-	a = a[1:]
-	omitempty := map[string]struct{}{}
-
-	for _, obj := range a {
-		m := orderedMapFrom(obj)
-		maps.Copy(omitempty, union.XorKeys(m))
-
-		for k, v := range m.Entries() {
-			uv, ok := union.Get(k)
-
-			if !ok {
-				continue
-			}
-
-			if uv.Object != nil && v.Object != nil {
-				uv.Object, _ = mergeObjectArray([]*jsonast.JsonObject{uv.Object, v.Object})
-				continue
-			}
-
-			var buf1, buf2 bytes.Buffer
-			convert0(uv, &buf1)
-			convert0(v, &buf2)
-			t1 := buf1.String()
-			t2 := buf2.String()
-
-			if t1 == t2 {
-				continue
-			}
-
-			if strings.HasPrefix(t1, "[]struct") && strings.HasPrefix(t2, "[]struct") {
-				objary := []*jsonast.JsonObject{}
-				for _, e := range uv.Array.Elements {
-					objary = append(objary, e.Object)
-				}
-				for _, e := range v.Array.Elements {
-					objary = append(objary, e.Object)
-				}
-				merged, _ := mergeObjectArray(objary)
-				uv.Array = &jsonast.JsonArray{Elements: []*jsonast.JsonValue{{Object: merged}}}
-			} else if strings.HasPrefix(t1, "[]") && strings.HasPrefix(t2, "[]") {
-				union.Set(k, &jsonast.JsonValue{Array: &jsonast.JsonArray{}}) // []any
-			} else {
-				null := "null"
-				union.Set(k, &jsonast.JsonValue{Null: &null}) // any
-			}
-		}
-
-		union.WeakMerge(m)
-	}
-
-	return union.Object(), omitempty
-}
-
-func convertObject(obj *jsonast.JsonObject, w io.Writer, omitempty map[string]struct{}) {
-	if omitempty == nil {
-		omitempty = map[string]struct{}{}
-	}
-
+func convertObject(obj *jsonast.JsonObject, w io.Writer) {
 	w.Write([]byte("struct {\n"))
 	fields := map[string]int{}
+	omittableKeys := obj.OmittableKeys
+
+	if omittableKeys == nil {
+		omittableKeys = map[string]struct{}{}
+	}
 
 	for _, m := range obj.Members {
 		f := convertKey(m.Key)
@@ -201,7 +117,7 @@ func convertObject(obj *jsonast.JsonObject, w io.Writer, omitempty map[string]st
 		convert0(m.Value, w)
 		w.Write([]byte(" `json:\""))
 		w.Write([]byte(m.Key))
-		if _, ok := omitempty[m.Key]; ok {
+		if _, ok := omittableKeys[m.Key]; ok {
 			w.Write([]byte(",omitempty"))
 		}
 		w.Write([]byte("\"`\n"))
