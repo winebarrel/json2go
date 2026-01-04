@@ -274,3 +274,34 @@
     }
   unmarshal: |-
     &[{Name:water BoilingPoint:{Units:C Value:100} Type: Density:{Units: Value:0}} {Name:oxygen BoilingPoint:{Units: Value:0} Type:gas Density:{Units:g/L Value:1.429}}]
+- name: merge nested object
+  input: |-
+    [
+        {
+            "name": "water",
+            "boiling_point": {
+                "units": "C",
+                "value": 100
+            }
+        },
+        {
+            "name": "oxygen",
+            "type": "gas",
+            "boiling_point": {
+                "color": "green",
+                "value": 200
+            }
+        }
+      ]
+  expected: |-
+    []struct {
+    	Name         string `json:"name"`
+    	BoilingPoint struct {
+    		Units string `json:"units"`
+    		Value int    `json:"value"`
+    		Color string `json:"color"`
+    	} `json:"boiling_point"`
+    	Type string `json:"type,omitempty"`
+    }
+  unmarshal: |-
+    &[{Name:water BoilingPoint:{Units:C Value:100 Color:} Type:} {Name:oxygen BoilingPoint:{Units: Value:200 Color:green} Type:gas}]

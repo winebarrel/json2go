@@ -112,17 +112,29 @@ func convertArray(a *jsonast.JsonArray, w io.Writer) {
 }
 
 func convertObjectArray(a []*jsonast.JsonObject, w io.Writer) {
+	union, omitempty := mergeObjectArray(a...)
+	w.Write([]byte("[]"))
+	convertObject(union, w, omitempty)
+}
+
+func mergeObjectArray(a ...*jsonast.JsonObject) (*jsonast.JsonObject, map[string]struct{}) {
 	union := orderedMapFrom(a[0])
 	a = a[1:]
 	omitempty := map[string]struct{}{}
 
 	for _, obj := range a {
 		m := orderedMapFrom(obj)
+		maps.Copy(omitempty, union.XorKeys(m))
 
 		for k, v := range m.Entries() {
 			uv, ok := union.Get(k)
 
 			if !ok {
+				continue
+			}
+
+			if uv.Object != nil || v.Object != nil {
+				uv.Object, _ = mergeObjectArray(uv.Object, v.Object)
 				continue
 			}
 
@@ -144,12 +156,10 @@ func convertObjectArray(a []*jsonast.JsonObject, w io.Writer) {
 			}
 		}
 
-		maps.Copy(omitempty, union.XorKeys(m))
 		union.WeakMerge(m)
 	}
 
-	w.Write([]byte("[]"))
-	convertObject(union.Object(), w, omitempty)
+	return union.Object(), omitempty
 }
 
 func convertObject(obj *jsonast.JsonObject, w io.Writer, omitempty map[string]struct{}) {
