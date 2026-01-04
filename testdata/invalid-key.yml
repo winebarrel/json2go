@@ -23,11 +23,11 @@
   expected: |-
     struct {
     	NAMING_FIELD  string `json:"_?"`
-    	NAMING_FIELD0 bool   `json:"?$)"`
-    	NAMING_FIELD1 int    `json:"(*+"`
+    	NAMING_FIELD2 bool   `json:"?$)"`
+    	NAMING_FIELD3 int    `json:"(*+"`
     }
   unmarshal: |-
-    &{NAMING_FIELD:a NAMING_FIELD0:false NAMING_FIELD1:9}
+    &{NAMING_FIELD:a NAMING_FIELD2:false NAMING_FIELD3:9}
 - name: duplicate key
   input: |-
     {
@@ -38,11 +38,11 @@
   expected: |-
     struct {
     	Num1Foo  string `json:"_1foo"`
-    	Num1Foo0 bool   `json:"__1foo"`
-    	Num1Foo1 int    `json:"___1foo"`
+    	Num1Foo2 bool   `json:"__1foo"`
+    	Num1Foo3 int    `json:"___1foo"`
     }
   unmarshal: |-
-    &{Num1Foo:b Num1Foo0:true Num1Foo1:80}
+    &{Num1Foo:b Num1Foo2:true Num1Foo3:80}
 - name: kanji
   input: |-
     {
@@ -60,15 +60,15 @@
   expected: |-
     struct {
     	NAMING_FIELD  string   `json:"名前"`
-    	NAMING_FIELD0 int      `json:"年齢"`
-    	NAMING_FIELD1 string   `json:"メールアドレス"`
-    	NAMING_FIELD2 bool     `json:"アクティブ"`
-    	NAMING_FIELD3 []string `json:"趣味"`
-    	NAMING_FIELD4 struct {
+    	NAMING_FIELD2 int      `json:"年齢"`
+    	NAMING_FIELD3 string   `json:"メールアドレス"`
+    	NAMING_FIELD4 bool     `json:"アクティブ"`
+    	NAMING_FIELD5 []string `json:"趣味"`
+    	NAMING_FIELD6 struct {
     		NAMING_FIELD  string `json:"郵便番号"`
-    		NAMING_FIELD0 string `json:"都道府県"`
-    		NAMING_FIELD1 string `json:"市区町村"`
+    		NAMING_FIELD2 string `json:"都道府県"`
+    		NAMING_FIELD3 string `json:"市区町村"`
     	} `json:"住所"`
     }
   unmarshal: |-
-    &{NAMING_FIELD:山田 太郎 NAMING_FIELD0:30 NAMING_FIELD1:taro.yamada@example.com NAMING_FIELD2:true NAMING_FIELD3:[読書 プログラミング 旅行] NAMING_FIELD4:{NAMING_FIELD:100-0001 NAMING_FIELD0:東京都 NAMING_FIELD1:千代田区}}
+    &{NAMING_FIELD:山田 太郎 NAMING_FIELD2:30 NAMING_FIELD3:taro.yamada@example.com NAMING_FIELD4:true NAMING_FIELD5:[読書 プログラミング 旅行] NAMING_FIELD6:{NAMING_FIELD:100-0001 NAMING_FIELD2:東京都 NAMING_FIELD3:千代田区}}
