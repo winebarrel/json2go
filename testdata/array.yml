@@ -54,9 +54,8 @@
     &[[true] [false]]
 - input: |-
     [[1],["2"],[true]]
-  # NOTE: not a bug.
   expected: |-
-    []any
+    [][]any
   unmarshal: |-
     &[[1] [2] [true]]
 - input: |-

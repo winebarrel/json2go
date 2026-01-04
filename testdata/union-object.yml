@@ -317,17 +317,17 @@
     []struct {
     	Name         string `json:"name"`
     	BoilingPoint struct {
-    		Units  string `json:"units"`
+    		Units  string `json:"units,omitempty"`
     		Colors []struct {
     			Name string `json:"name"`
     			Alts struct {
-    				Pink   int `json:"pink"`
-    				Cyan   int `json:"cyan"`
-    				Yellow int `json:"yellow"`
+    				Pink   int `json:"pink,omitempty"`
+    				Cyan   int `json:"cyan,omitempty"`
+    				Yellow int `json:"yellow,omitempty"`
     			} `json:"alts"`
     			Code string `json:"code"`
     		} `json:"colors"`
-    		Value int `json:"value"`
+    		Value int `json:"value,omitempty"`
     	} `json:"boiling_point"`
     	Type string `json:"type,omitempty"`
     }
@@ -362,13 +362,13 @@
     []struct {
     	Name         string `json:"name"`
     	BoilingPoint struct {
-    		Units string `json:"units"`
+    		Units string `json:"units,omitempty"`
     		Color struct {
     			Name string `json:"name"`
-    			Alt  string `json:"alt"`
-    			Code string `json:"code"`
+    			Alt  string `json:"alt,omitempty"`
+    			Code string `json:"code,omitempty"`
     		} `json:"color"`
-    		Value int `json:"value"`
+    		Value int `json:"value,omitempty"`
     	} `json:"boiling_point"`
     	Type string `json:"type,omitempty"`
     }
@@ -397,9 +397,9 @@
     []struct {
     	Name         string `json:"name"`
     	BoilingPoint struct {
-    		Units string `json:"units"`
+    		Units string `json:"units,omitempty"`
     		Value int    `json:"value"`
-    		Color string `json:"color"`
+    		Color string `json:"color,omitempty"`
     	} `json:"boiling_point"`
     	Type string `json:"type,omitempty"`
     }
