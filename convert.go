@@ -133,7 +133,7 @@ func mergeObjectArray(a ...*jsonast.JsonObject) (*jsonast.JsonObject, map[string
 				continue
 			}
 
-			if uv.Object != nil || v.Object != nil {
+			if uv.Object != nil && v.Object != nil {
 				uv.Object, _ = mergeObjectArray(uv.Object, v.Object)
 				continue
 			}
