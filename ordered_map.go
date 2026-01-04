@@ -47,9 +47,11 @@ func (m *orderedMap) Entries() iter.Seq2[string, *jsonast.JsonValue] {
 	}
 }
 
-func (m *orderedMap) Merge(other *orderedMap) {
+func (m *orderedMap) WeakMerge(other *orderedMap) {
 	for k, v := range other.Entries() {
-		m.Set(k, v)
+		if _, ok := m.Get(k); !ok {
+			m.Set(k, v)
+		}
 	}
 }
 
