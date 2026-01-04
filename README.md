@@ -92,7 +92,7 @@ import (
 
 func main() {
 	json := `{"foo":"bar","zoo":[100,200],"baz":{"hoge":"piyo"}}`
-	gosrc, err := json2go.Convert([]byte(json))
+	gosrc, err := json2go.ConvertBytes([]byte(json))
 
 	if err != nil {
 		log.Fatal(err)
