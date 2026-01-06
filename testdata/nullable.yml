@@ -1,0 +1,117 @@
+- name: nullable 1
+  input: |-
+      [
+        {
+          "str": "s",
+          "num": 1,
+          "true": true,
+          "false": false,
+          "null": null,
+          "obj": {"foo": "bar"},
+          "ary": [1, 2, 3]
+        },
+        {
+          "str": null,
+          "num": null,
+          "true": null,
+          "false": null,
+          "obj": null,
+          "ary": null
+        }
+      ]
+  expected: |-
+    []struct {
+    	Str   *string `json:"str"`
+    	Num   *int    `json:"num"`
+    	True  *bool   `json:"true"`
+    	False *bool   `json:"false"`
+    	Null  any     `json:"null,omitempty"`
+    	Obj   struct {
+    		Foo string `json:"foo"`
+    	} `json:"obj"`
+    	Ary []int `json:"ary"`
+    }
+  unmarshal: skip
+- name: nullable 2
+  input: |-
+      [
+        {
+          "str": null,
+          "num": null,
+          "true": null,
+          "false": null,
+          "obj": null,
+          "ary": null
+        },
+        {
+          "str": null,
+          "num": null,
+          "true": null,
+          "false": null,
+          "obj": null,
+          "ary": null
+        },
+        {
+          "str": "s",
+          "num": 1,
+          "true": true,
+          "false": false,
+          "null": null,
+          "obj": {"foo": "bar"},
+          "ary": [1, 2, 3]
+        }
+      ]
+  expected: |-
+    []struct {
+    	Str   *string `json:"str"`
+    	Num   *int    `json:"num"`
+    	True  *bool   `json:"true"`
+    	False *bool   `json:"false"`
+    	Obj   struct {
+    		Foo string `json:"foo"`
+    	} `json:"obj"`
+    	Ary  []int `json:"ary"`
+    	Null any   `json:"null,omitempty"`
+    }
+  unmarshal: skip
+- name: nullable 3
+  input: |-
+      [
+        {
+          "str": "s",
+          "num": 1,
+          "true": true,
+          "false": false,
+          "null": null,
+          "obj": {"foo": "bar"},
+          "ary": [1, 2, 3]
+        },
+        {
+          "str": null,
+          "num": null,
+          "true": null,
+          "false": null,
+          "obj": null,
+          "ary": null
+        },
+        {
+          "true": "s",
+          "false": 1,
+          "str": true,
+          "num": false,
+          "null": 2,
+          "ary": {"foo": "bar"},
+          "obj": [1, 2, 3]
+        }
+      ]
+  expected: |-
+    []struct {
+    	Str   any  `json:"str"`
+    	Num   any  `json:"num"`
+    	True  any  `json:"true"`
+    	False any  `json:"false"`
+    	Null  *int `json:"null"`
+    	Obj   any  `json:"obj"`
+    	Ary   any  `json:"ary"`
+    }
+  unmarshal: skip
