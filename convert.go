@@ -120,7 +120,7 @@ func convertObject(obj *jsonast.JsonObject, w io.Writer) {
 		w.Write([]byte(" "))
 		convert0(m.Value, w)
 		w.Write([]byte(" `json:\""))
-		w.Write([]byte(m.Key))
+		w.Write([]byte(strings.ReplaceAll(m.Key, `"`, `\"`)))
 		if _, ok := omittableKeys[m.Key]; ok {
 			w.Write([]byte(",omitempty"))
 		}

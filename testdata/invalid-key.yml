@@ -72,3 +72,14 @@
     }
   unmarshal: |-
     &{NAMING_FIELD:山田 太郎 NAMING_FIELD2:30 NAMING_FIELD3:taro.yamada@example.com NAMING_FIELD4:true NAMING_FIELD5:[読書 プログラミング 旅行] NAMING_FIELD6:{NAMING_FIELD:100-0001 NAMING_FIELD2:東京都 NAMING_FIELD3:千代田区}}
+- name: quote
+  input: |-
+    {
+      "\u0022": 0
+    }
+  expected: |-
+    struct {
+    	NAMING_FIELD string `json:"\""`
+    }
+  unmarshal: |-
+    &{NAMING_FIELD:0}
