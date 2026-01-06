@@ -86,7 +86,7 @@
     	BornAt      string   `json:"Born At"`
     	Birthdate   string   `json:"Birthdate"`
     	Photo       string   `json:"photo"`
-    	Wife        any      `json:"wife"`
+    	Wife        *string  `json:"wife"`
     	Weight      float64  `json:"weight"`
     	HasChildren bool     `json:"hasChildren"`
     	HasGreyHair bool     `json:"hasGreyHair"`

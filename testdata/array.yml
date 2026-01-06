@@ -56,6 +56,10 @@
     [[1],["2"],[true]]
   expected: |-
     [][]any
+- input: |-
+    [[1],[null],[2]]
+  expected: |-
+    [][]*int
   unmarshal: |-
     &[[1] [2] [true]]
 - input: |-
