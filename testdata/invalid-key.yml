@@ -79,7 +79,7 @@
     }
   expected: |-
     struct {
-    	NAMING_FIELD string `json:"\""`
+    	NAMING_FIELD int `json:"\""`
     }
   unmarshal: |-
     &{NAMING_FIELD:0}
