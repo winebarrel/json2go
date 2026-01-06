@@ -53,13 +53,17 @@ func convert(parse func(string) (*jsonast.JsonValue, error), optfns ...optionFun
 }
 
 func convert0(v *jsonast.JsonValue, w io.Writer) {
+	if v.Nullable() {
+		w.Write([]byte("*"))
+	}
+
 	switch value := v.Value().(type) {
 	case *jsonast.JsonString:
 		w.Write([]byte("string"))
 	case *jsonast.JsonTrue, *jsonast.JsonFalse:
 		w.Write([]byte("bool"))
 	case *jsonast.JsonNumber:
-		if strings.Contains(value.String(), ".") {
+		if strings.Contains(value.Text, ".") {
 			w.Write([]byte("float64"))
 		} else {
 			w.Write([]byte("int"))

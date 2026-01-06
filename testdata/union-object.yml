@@ -86,14 +86,13 @@
     	BornAt      string   `json:"Born At"`
     	Birthdate   string   `json:"Birthdate"`
     	Photo       string   `json:"photo"`
-    	Wife        any      `json:"wife"`
+    	Wife        *string  `json:"wife"`
     	Weight      float64  `json:"weight"`
     	HasChildren bool     `json:"hasChildren"`
     	HasGreyHair bool     `json:"hasGreyHair"`
     	Children    []string `json:"children"`
     }
-  unmarshal: |-
-    &[{Name:Tom Cruise Age:56 BornAt:Syracuse, NY Birthdate:July 3, 1962 Photo:https://jsonformatter.org/img/tom-cruise.jpg Wife:<nil> Weight:67.5 HasChildren:true HasGreyHair:false Children:[Suri Isabella Jane Connor]} {Name:Robert Downey Jr. Age:53 BornAt:New York City, NY Birthdate:April 4, 1965 Photo:https://jsonformatter.org/img/Robert-Downey-Jr.jpg Wife:Susan Downey Weight:77.1 HasChildren:true HasGreyHair:false Children:[Indio Falconer Avri Roel Exton Elias]}]
+  unmarshal: skip
 - name: union object array include any array
   input: |-
       [

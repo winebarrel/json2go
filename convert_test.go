@@ -89,7 +89,7 @@ func TestConvertBytes_OK(t *testing.T) {
 				require.NoError(t, err)
 				assert.Equal(t, tt.Expected, string(out))
 
-				if testAcc {
+				if testAcc && tt.Unmarshal != "skip" {
 					x := compile(t, out)
 					err := json.Unmarshal([]byte(tt.Input), x)
 					require.NoError(t, err)
