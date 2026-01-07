@@ -18,6 +18,7 @@ func init() {
 
 type options struct {
 	File    string `arg:"" optional:"" help:"JSON file. If not specified, read from stdin."`
+	Flat    bool   `negatable:"" help:"Flattening structs."`
 	Version kong.VersionFlag
 }
 
@@ -51,7 +52,13 @@ func main() {
 		r = file
 	}
 
-	out, err := json2go.Convert(r, json2go.OptionFilename(opts.File))
+	optfns := []json2go.OptFn{json2go.OptionFilename(opts.File)}
+
+	if opts.Flat {
+		optfns = append(optfns, json2go.OptionFlat(true))
+	}
+
+	out, err := json2go.Convert(r, optfns...)
 
 	if err != nil {
 		log.Fatal(err)

@@ -12,7 +12,7 @@ import (
 	"github.com/winebarrel/jsonast"
 )
 
-func ConvertBytes(src []byte, optfns ...optFn) ([]byte, error) {
+func ConvertBytes(src []byte, optfns ...OptFn) ([]byte, error) {
 	f := func(filename string) (*jsonast.JsonValue, error) {
 		return jsonast.ParseBytes(filename, src)
 	}
@@ -20,7 +20,7 @@ func ConvertBytes(src []byte, optfns ...optFn) ([]byte, error) {
 	return convert(f, optfns...)
 }
 
-func Convert(r io.Reader, optfns ...optFn) ([]byte, error) {
+func Convert(r io.Reader, optfns ...OptFn) ([]byte, error) {
 	f := func(filename string) (*jsonast.JsonValue, error) {
 		return jsonast.Parse(filename, r)
 	}
@@ -28,7 +28,7 @@ func Convert(r io.Reader, optfns ...optFn) ([]byte, error) {
 	return convert(f, optfns...)
 }
 
-func convert(parse func(string) (*jsonast.JsonValue, error), optfns ...optFn) ([]byte, error) {
+func convert(parse func(string) (*jsonast.JsonValue, error), optfns ...OptFn) ([]byte, error) {
 	options := &options{}
 
 	for _, f := range optfns {
@@ -41,18 +41,30 @@ func convert(parse func(string) (*jsonast.JsonValue, error), optfns ...optFn) ([
 		return nil, fmt.Errorf("failed to parse json: %w", err)
 	}
 
-	c := &converter{options: options}
+	var buf bytes.Buffer
+	bufs := []*bytes.Buffer{&buf}
 
-	bufs := newBuffers()
-	bufs.Push(&bytes.Buffer{})
-	c.convertAny(v, bufs)
+	c := &converter{
+		opts: options,
+		bufs: bufs,
+	}
+
+	c.convertAny(v, &buf)
 
 	var out bytes.Buffer
-	for b := range bufs.Iter() {
+	for i, b := range c.bufs {
 		o, err := format.Source(b.Bytes())
 
 		if err != nil {
 			return nil, fmt.Errorf("failed to format golang: %w", err)
+		}
+
+		if i == 0 {
+			if options.flat {
+				out.WriteString("type Root ")
+			}
+		} else {
+			out.WriteByte('\n')
 		}
 
 		out.Write(o)
@@ -62,7 +74,8 @@ func convert(parse func(string) (*jsonast.JsonValue, error), optfns ...optFn) ([
 }
 
 type converter struct {
-	*options
+	opts *options
+	bufs []*bytes.Buffer
 }
 
 func (c *converter) convertAny(v *jsonast.JsonValue, w io.Writer) {
@@ -120,18 +133,37 @@ func (c *converter) convertObject(obj *jsonast.JsonObject, w io.Writer) {
 			f = "NAMING_FIELD"
 		}
 
-		w.Write([]byte(f))
 		num, ok := fields[f]
 
 		if ok {
-			w.Write([]byte(strconv.Itoa(num)))
 			fields[f] = num + 1
+			f += strconv.Itoa(num)
 		} else {
 			fields[f] = 2
 		}
 
+		w.Write([]byte(f))
 		w.Write([]byte(" "))
+
+		var worig io.Writer
+
+		if c.opts.flat && m.Value.IsObject() {
+			w.Write([]byte(f))
+			worig = w
+			b := &bytes.Buffer{}
+			b.WriteString("type ")
+			b.WriteString(f)
+			b.WriteString(" ")
+			c.bufs = append(c.bufs, b)
+			w = b
+		}
+
 		c.convertAny(m.Value, w)
+
+		if worig != nil {
+			w = worig
+		}
+
 		w.Write([]byte(" `json:"))
 		tag := m.Key
 		if _, ok := omittableKeys[m.Key]; ok {

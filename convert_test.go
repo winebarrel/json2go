@@ -54,6 +54,7 @@ type testCase struct {
 	Input     string
 	Expected  string
 	Unmarshal string
+	Flatten   bool
 }
 
 func TestConvertBytes_OK(t *testing.T) {
@@ -85,11 +86,16 @@ func TestConvertBytes_OK(t *testing.T) {
 			}
 
 			t.Run(f+"/"+name, func(t *testing.T) {
-				out, err := json2go.ConvertBytes([]byte(tt.Input))
+				optfns := []json2go.OptFn{}
+				if tt.Flatten {
+					optfns = append(optfns, json2go.OptionFlat(true))
+				}
+
+				out, err := json2go.ConvertBytes([]byte(tt.Input), optfns...)
 				require.NoError(t, err)
 				assert.Equal(t, tt.Expected, string(out))
 
-				if testAcc && tt.Unmarshal != "skip" {
+				if testAcc && tt.Unmarshal != "skip" && !tt.Flatten {
 					x := compile(t, out)
 					err := json.Unmarshal([]byte(tt.Input), x)
 					require.NoError(t, err)
