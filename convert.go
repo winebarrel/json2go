@@ -41,15 +41,22 @@ func convert(parse func(string) (*jsonast.JsonValue, error), optfns ...optFn) ([
 		return nil, fmt.Errorf("failed to parse json: %w", err)
 	}
 
-	var buf bytes.Buffer
-	convert0(v, &buf)
-	out, err := format.Source(buf.Bytes())
+	bufs := newBuffers()
+	bufs.Push(&bytes.Buffer{})
+	convert0(v, bufs)
 
-	if err != nil {
-		return nil, fmt.Errorf("failed to format golang: %w", err)
+	var out bytes.Buffer
+	for b := range bufs.Iter() {
+		o, err := format.Source(b.Bytes())
+
+		if err != nil {
+			return nil, fmt.Errorf("failed to format golang: %w", err)
+		}
+
+		out.Write(o)
 	}
 
-	return out, nil
+	return out.Bytes(), nil
 }
 
 func convert0(v *jsonast.JsonValue, w io.Writer) {
