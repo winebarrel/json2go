@@ -166,8 +166,10 @@ func (c *converter) convertObject(obj *jsonast.JsonObject, w io.Writer) {
 
 		w.Write([]byte(" `json:"))
 		tag := m.Key
-		if _, ok := omittableKeys[m.Key]; ok {
-			tag += ",omitempty"
+		if c.opts.omitempty {
+			if _, ok := omittableKeys[m.Key]; ok {
+				tag += ",omitempty"
+			}
 		}
 		w.Write([]byte(strconv.Quote(tag)))
 		w.Write([]byte("`\n"))

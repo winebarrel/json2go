@@ -17,9 +17,10 @@ func init() {
 }
 
 type options struct {
-	File    string `arg:"" optional:"" help:"JSON file. If not specified, read from stdin."`
-	Flat    bool   `negatable:"" help:"Flattening structs."`
-	Version kong.VersionFlag
+	File      string `arg:"" optional:"" help:"JSON file. If not specified, read from stdin."`
+	Flat      bool   `negatable:"" help:"Flattening structs."`
+	Omitempty bool   `negatable:"" default:"true" help:"Add 'omitempty' to optional fields. (default: true)"`
+	Version   kong.VersionFlag
 }
 
 func parseArgs() *options {
@@ -52,10 +53,10 @@ func main() {
 		r = file
 	}
 
-	optfns := []json2go.OptFn{json2go.OptionFilename(opts.File)}
-
-	if opts.Flat {
-		optfns = append(optfns, json2go.OptionFlat(true))
+	optfns := []json2go.OptFn{
+		json2go.OptionFilename(opts.File),
+		json2go.OptionFlat(opts.Flat),
+		json2go.OptionOmitempty(opts.Omitempty),
 	}
 
 	out, err := json2go.Convert(r, optfns...)

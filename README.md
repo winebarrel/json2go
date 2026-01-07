@@ -20,8 +20,9 @@ Arguments:
   [<file>]    JSON file. If not specified, read from stdin.
 
 Flags:
-  -h, --help         Show help.
-      --[no-]flat    Flattening structs.
+  -h, --help              Show help.
+      --[no-]flat         Flattening structs.
+      --[no-]omitempty    Add 'omitempty' to optional fields. (default: true)
       --version
 ```
 

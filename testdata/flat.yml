@@ -1,5 +1,5 @@
-- name: flatten 1
-  flatten: true
+- name: flat 1
+  flat: true
   input: |-
     {
       "hello": ["world"],
@@ -17,8 +17,8 @@
     type Foo struct {
     	Bar int `json:"bar"`
     }
-- name: flatten 2
-  flatten: true
+- name: flat 2
+  flat: true
   input: |-
     {
       "hello": ["world"],
@@ -47,8 +47,8 @@
     		Piyo any `json:"piyo,omitempty"`
     	} `json:"hoge"`
     }
-- name: flatten 3
-  flatten: true
+- name: flat 3
+  flat: true
   input: |-
     {
       "hello": ["world"],
@@ -83,8 +83,8 @@
     type Baz struct {
     	Alpha bool `json:"alpha"`
     }
-- name: flatten 4
-  flatten: true
+- name: flat 4
+  flat: true
   input: |-
     [
       {
@@ -134,8 +134,8 @@
     	Alpha bool `json:"alpha"`
     }
 
-- name: flatten 5
-  flatten: true
+- name: flat 5
+  flat: true
   input: |-
     [
       {
