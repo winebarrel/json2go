@@ -56,6 +56,7 @@ type testCase struct {
 	Unmarshal   string
 	Flat        bool
 	NoOmitempty bool
+	NoPointer   bool
 }
 
 func TestConvertBytes_OK(t *testing.T) {
@@ -90,6 +91,7 @@ func TestConvertBytes_OK(t *testing.T) {
 				optfns := []json2go.OptFn{
 					json2go.OptionFlat(tt.Flat),
 					json2go.OptionOmitempty(!tt.NoOmitempty),
+					json2go.OptionPointer(!tt.NoPointer),
 				}
 
 				out, err := json2go.ConvertBytes([]byte(tt.Input), optfns...)

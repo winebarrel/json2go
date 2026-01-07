@@ -20,6 +20,7 @@ type options struct {
 	File      string `arg:"" optional:"" help:"JSON file. If not specified, read from stdin."`
 	Flat      bool   `negatable:"" help:"Flattening structs."`
 	Omitempty bool   `negatable:"" default:"true" help:"Add 'omitempty' to optional fields. (default: true)"`
+	Pointer   bool   `negatable:"" default:"true" help:"Make nullable fields pointer types. (default: true)"`
 	Version   kong.VersionFlag
 }
 
@@ -57,6 +58,7 @@ func main() {
 		json2go.OptionFilename(opts.File),
 		json2go.OptionFlat(opts.Flat),
 		json2go.OptionOmitempty(opts.Omitempty),
+		json2go.OptionPointer(opts.Pointer),
 	}
 
 	out, err := json2go.Convert(r, optfns...)
