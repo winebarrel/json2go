@@ -1,0 +1,206 @@
+- name: flatten 1
+  flatten: true
+  input: |-
+    {
+      "hello": ["world"],
+      "foo": {
+        "bar": 100
+      },
+      "zoo": true
+    }
+  expected: |-
+    type Root struct {
+    	Hello []string `json:"hello"`
+    	Foo   Foo      `json:"foo"`
+    	Zoo   bool     `json:"zoo"`
+    }
+    type Foo struct {
+    	Bar int `json:"bar"`
+    }
+- name: flatten 2
+  flatten: true
+  input: |-
+    {
+      "hello": ["world"],
+      "foo": {
+        "bar": {
+          "hoge": [
+            {"fuga": 100},
+            {"piyo": null}
+          ]
+        }
+      },
+      "zoo": true
+    }
+  expected: |-
+    type Root struct {
+    	Hello []string `json:"hello"`
+    	Foo   Foo      `json:"foo"`
+    	Zoo   bool     `json:"zoo"`
+    }
+    type Foo struct {
+    	Bar Bar `json:"bar"`
+    }
+    type Bar struct {
+    	Hoge []struct {
+    		Fuga int `json:"fuga,omitempty"`
+    		Piyo any `json:"piyo,omitempty"`
+    	} `json:"hoge"`
+    }
+- name: flatten 3
+  flatten: true
+  input: |-
+    {
+      "hello": ["world"],
+      "foo": {
+        "bar": {
+          "hoge": [
+            {"fuga": 100},
+            {"fuga": null}
+          ]
+        },
+        "baz": {
+          "alpha": true
+        }
+      },
+      "zoo": true
+    }
+  expected: |-
+    type Root struct {
+    	Hello []string `json:"hello"`
+    	Foo   Foo      `json:"foo"`
+    	Zoo   bool     `json:"zoo"`
+    }
+    type Foo struct {
+    	Bar Bar `json:"bar"`
+    	Baz Baz `json:"baz"`
+    }
+    type Bar struct {
+    	Hoge []struct {
+    		Fuga *int `json:"fuga"`
+    	} `json:"hoge"`
+    }
+    type Baz struct {
+    	Alpha bool `json:"alpha"`
+    }
+- name: flatten 4
+  flatten: true
+  input: |-
+    [
+      {
+        "hello": ["world"],
+        "foo": {
+          "bar": {
+            "hoge": [
+              {"fuga": 100},
+              {"fuga": null}
+            ]
+          },
+          "bar2": {
+            "hoge2": [
+              {"fuga": 100},
+              {"fuga": null}
+            ]
+          },
+          "baz": {
+            "alpha": true
+          }
+        },
+        "zoo": true
+      }
+    ]
+  expected: |-
+    type Root []struct {
+    	Hello []string `json:"hello"`
+    	Foo   Foo      `json:"foo"`
+    	Zoo   bool     `json:"zoo"`
+    }
+    type Foo struct {
+    	Bar  Bar  `json:"bar"`
+    	Bar2 Bar2 `json:"bar2"`
+    	Baz  Baz  `json:"baz"`
+    }
+    type Bar struct {
+    	Hoge []struct {
+    		Fuga *int `json:"fuga"`
+    	} `json:"hoge"`
+    }
+    type Bar2 struct {
+    	Hoge2 []struct {
+    		Fuga *int `json:"fuga"`
+    	} `json:"hoge2"`
+    }
+    type Baz struct {
+    	Alpha bool `json:"alpha"`
+    }
+
+- name: flatten 5
+  flatten: true
+  input: |-
+    [
+      {
+        "n": 1,
+        "foo": {
+          "n": 1,
+          "bar": {
+            "n": 1,
+            "zoo": {
+              "n": 1,
+              "baz": {
+                "n": 1,
+                "hoge": {
+                  "n": 1,
+                  "fuga": {
+                    "n": 1,
+                    "piyo:": [1,2,3],
+                    "n":2
+                  },
+                  "n":2
+                },
+                "n":2
+              },
+              "n":2
+            },
+            "n":2
+          },
+          "n":2
+        },
+        "n":2
+      }
+    ]
+  expected: |-
+    type Root []struct {
+    	N   int `json:"n"`
+    	Foo Foo `json:"foo"`
+    	N2  int `json:"n"`
+    }
+    type Foo struct {
+    	N   int `json:"n"`
+    	Bar Bar `json:"bar"`
+    	N2  int `json:"n"`
+    }
+    type Bar struct {
+    	N   int `json:"n"`
+    	Zoo Zoo `json:"zoo"`
+    	N2  int `json:"n"`
+    }
+    type Zoo struct {
+    	N   int `json:"n"`
+    	Baz Baz `json:"baz"`
+    	N2  int `json:"n"`
+    }
+    type Baz struct {
+    	N    int  `json:"n"`
+    	Hoge Hoge `json:"hoge"`
+    	N2   int  `json:"n"`
+    }
+    type Hoge struct {
+    	N    int  `json:"n"`
+    	Fuga Fuga `json:"fuga"`
+    	N2   int  `json:"n"`
+    }
+    type Fuga struct {
+    	N    int   `json:"n"`
+    	Piyo []int `json:"piyo:"`
+    	N2   int   `json:"n"`
+    }

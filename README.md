@@ -20,7 +20,8 @@ Arguments:
   [<file>]    JSON file. If not specified, read from stdin.
 
 Flags:
-  -h, --help       Show help.
+  -h, --help         Show help.
+      --[no-]flat    Flattening structs.
       --version
 ```
 
@@ -75,6 +76,39 @@ struct {
 			} `json:"GlossList"`
 		} `json:"GlossDiv"`
 	} `json:"glossary"`
+}
+```
+
+### `--flat` option
+
+```go
+// json2go --flat example.json
+type Root struct {
+	Glossary Glossary `json:"glossary"`
+}
+type Glossary struct {
+	Title    string   `json:"title"`
+	GlossDiv GlossDiv `json:"GlossDiv"`
+}
+type GlossDiv struct {
+	Title     string    `json:"title"`
+	GlossList GlossList `json:"GlossList"`
+}
+type GlossList struct {
+	GlossEntry GlossEntry `json:"GlossEntry"`
+}
+type GlossEntry struct {
+	ID        string   `json:"ID"`
+	SortAs    string   `json:"SortAs"`
+	GlossTerm string   `json:"GlossTerm"`
+	Acronym   string   `json:"Acronym"`
+	Abbrev    string   `json:"Abbrev"`
+	GlossDef  GlossDef `json:"GlossDef"`
+	GlossSee  string   `json:"GlossSee"`
+}
+type GlossDef struct {
+	Para         string   `json:"para"`
+	GlossSeeAlso []string `json:"GlossSeeAlso"`
 }
 ```
 
