@@ -79,7 +79,7 @@ type converter struct {
 }
 
 func (c *converter) convertAny(v *jsonast.JsonValue, w io.Writer) {
-	if v.Nullable() {
+	if c.opts.pointer && v.Nullable() {
 		w.Write([]byte("*"))
 	}
 

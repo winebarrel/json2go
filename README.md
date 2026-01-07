@@ -23,6 +23,7 @@ Flags:
   -h, --help              Show help.
       --[no-]flat         Flattening structs.
       --[no-]omitempty    Add 'omitempty' to optional fields. (default: true)
+      --[no-]pointer      Make nullable fields pointer types. (default: true)
       --version
 ```
 
