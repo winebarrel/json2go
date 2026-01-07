@@ -41,9 +41,11 @@ func convert(parse func(string) (*jsonast.JsonValue, error), optfns ...optFn) ([
 		return nil, fmt.Errorf("failed to parse json: %w", err)
 	}
 
+	c := &converter{options: options}
+
 	bufs := newBuffers()
 	bufs.Push(&bytes.Buffer{})
-	convert0(v, bufs)
+	c.convertAny(v, bufs)
 
 	var out bytes.Buffer
 	for b := range bufs.Iter() {
@@ -59,7 +61,11 @@ func convert(parse func(string) (*jsonast.JsonValue, error), optfns ...optFn) ([
 	return out.Bytes(), nil
 }
 
-func convert0(v *jsonast.JsonValue, w io.Writer) {
+type converter struct {
+	*options
+}
+
+func (c *converter) convertAny(v *jsonast.JsonValue, w io.Writer) {
 	if v.Nullable() {
 		w.Write([]byte("*"))
 	}
@@ -76,15 +82,15 @@ func convert0(v *jsonast.JsonValue, w io.Writer) {
 			w.Write([]byte("int"))
 		}
 	case *jsonast.JsonArray:
-		convertArray(value, w)
+		c.convertArray(value, w)
 	case *jsonast.JsonObject:
-		convertObject(value, w)
+		c.convertObject(value, w)
 	default:
 		w.Write([]byte("any"))
 	}
 }
 
-func convertArray(a *jsonast.JsonArray, w io.Writer) {
+func (c *converter) convertArray(a *jsonast.JsonArray, w io.Writer) {
 	if a.Len() == 0 {
 		w.Write([]byte("[]any"))
 		return
@@ -92,13 +98,13 @@ func convertArray(a *jsonast.JsonArray, w io.Writer) {
 
 	elem := a.UnionType(nil).Array.Elements[0]
 	var base bytes.Buffer
-	convert0(elem, &base)
+	c.convertAny(elem, &base)
 
 	w.Write([]byte("[]"))
 	w.Write(base.Bytes())
 }
 
-func convertObject(obj *jsonast.JsonObject, w io.Writer) {
+func (c *converter) convertObject(obj *jsonast.JsonObject, w io.Writer) {
 	w.Write([]byte("struct {\n"))
 	fields := map[string]int{}
 	omittableKeys := obj.OmittableKeys
@@ -125,7 +131,7 @@ func convertObject(obj *jsonast.JsonObject, w io.Writer) {
 		}
 
 		w.Write([]byte(" "))
-		convert0(m.Value, w)
+		c.convertAny(m.Value, w)
 		w.Write([]byte(" `json:"))
 		tag := m.Key
 		if _, ok := omittableKeys[m.Key]; ok {
