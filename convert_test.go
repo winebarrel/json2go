@@ -39,7 +39,7 @@ func TestConvertBytes_Err(t *testing.T) {
 }
 
 func TestConvertBytes_ErrWithFilename(t *testing.T) {
-	_, err := json2go.ConvertBytes([]byte("{"), json2go.WithFilename("example.json"))
+	_, err := json2go.ConvertBytes([]byte("{"), json2go.OptionFilename("example.json"))
 	require.ErrorContains(t, err, `failed to parse json: example.json:1:2: unexpected token "<EOF>" (expected "}")`)
 }
 
