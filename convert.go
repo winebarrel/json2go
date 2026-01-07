@@ -12,7 +12,7 @@ import (
 	"github.com/winebarrel/jsonast"
 )
 
-func ConvertBytes(src []byte, optfns ...optionFunc) ([]byte, error) {
+func ConvertBytes(src []byte, optfns ...optFn) ([]byte, error) {
 	f := func(filename string) (*jsonast.JsonValue, error) {
 		return jsonast.ParseBytes(filename, src)
 	}
@@ -20,7 +20,7 @@ func ConvertBytes(src []byte, optfns ...optionFunc) ([]byte, error) {
 	return convert(f, optfns...)
 }
 
-func Convert(r io.Reader, optfns ...optionFunc) ([]byte, error) {
+func Convert(r io.Reader, optfns ...optFn) ([]byte, error) {
 	f := func(filename string) (*jsonast.JsonValue, error) {
 		return jsonast.Parse(filename, r)
 	}
@@ -28,7 +28,7 @@ func Convert(r io.Reader, optfns ...optionFunc) ([]byte, error) {
 	return convert(f, optfns...)
 }
 
-func convert(parse func(string) (*jsonast.JsonValue, error), optfns ...optionFunc) ([]byte, error) {
+func convert(parse func(string) (*jsonast.JsonValue, error), optfns ...optFn) ([]byte, error) {
 	options := &options{}
 
 	for _, f := range optfns {

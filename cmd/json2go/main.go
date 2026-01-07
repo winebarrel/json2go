@@ -51,7 +51,7 @@ func main() {
 		r = file
 	}
 
-	out, err := json2go.Convert(r, json2go.WithFilename(opts.File))
+	out, err := json2go.Convert(r, json2go.OptionFilename(opts.File))
 
 	if err != nil {
 		log.Fatal(err)

@@ -4,9 +4,9 @@ type options struct {
 	filename string
 }
 
-type optionFunc func(*options)
+type optFn func(*options)
 
-func WithFilename(filename string) optionFunc {
+func OptionFilename(filename string) optFn {
 	return func(o *options) {
 		o.filename = filename
 	}
