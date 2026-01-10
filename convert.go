@@ -13,11 +13,8 @@ import (
 )
 
 func ConvertBytes(src []byte, optfns ...OptFn) ([]byte, error) {
-	f := func(filename string) (*jsonast.JsonValue, error) {
-		return jsonast.ParseBytes(filename, src)
-	}
-
-	return convert(f, optfns...)
+	buf := bytes.NewBuffer(src)
+	return Convert(buf, optfns...)
 }
 
 func Convert(r io.Reader, optfns ...OptFn) ([]byte, error) {
@@ -80,34 +77,34 @@ type converter struct {
 	bufs []*bytes.Buffer
 }
 
-func (c *converter) convertAny(v *jsonast.JsonValue, w io.Writer) {
+func (c *converter) convertAny(v *jsonast.JsonValue, w *bytes.Buffer) {
 	if c.opts.pointer && v.Nullable() {
-		w.Write([]byte("*"))
+		w.WriteString("*")
 	}
 
 	switch value := v.Value().(type) {
 	case *jsonast.JsonString:
-		w.Write([]byte("string"))
+		w.WriteString("string")
 	case *jsonast.JsonTrue, *jsonast.JsonFalse:
-		w.Write([]byte("bool"))
+		w.WriteString("bool")
 	case *jsonast.JsonNumber:
 		if strings.Contains(value.Text, ".") {
-			w.Write([]byte("float64"))
+			w.WriteString("float64")
 		} else {
-			w.Write([]byte("int"))
+			w.WriteString("int")
 		}
 	case *jsonast.JsonArray:
 		c.convertArray(value, w)
 	case *jsonast.JsonObject:
 		c.convertObject(value, w)
 	default:
-		w.Write([]byte("any"))
+		w.WriteString("any")
 	}
 }
 
-func (c *converter) convertArray(a *jsonast.JsonArray, w io.Writer) {
+func (c *converter) convertArray(a *jsonast.JsonArray, w *bytes.Buffer) {
 	if a.Len() == 0 {
-		w.Write([]byte("[]any"))
+		w.WriteString("[]any")
 		return
 	}
 
@@ -115,12 +112,12 @@ func (c *converter) convertArray(a *jsonast.JsonArray, w io.Writer) {
 	var base bytes.Buffer
 	c.convertAny(elem, &base)
 
-	w.Write([]byte("[]"))
+	w.WriteString("[]")
 	w.Write(base.Bytes())
 }
 
-func (c *converter) convertObject(obj *jsonast.JsonObject, w io.Writer) {
-	w.Write([]byte("struct {\n"))
+func (c *converter) convertObject(obj *jsonast.JsonObject, w *bytes.Buffer) {
+	w.WriteString("struct {\n")
 	fields := map[string]int{}
 	omittableKeys := obj.OmittableKeys
 
@@ -144,13 +141,13 @@ func (c *converter) convertObject(obj *jsonast.JsonObject, w io.Writer) {
 			fields[f] = 2
 		}
 
-		w.Write([]byte(f))
-		w.Write([]byte(" "))
+		w.WriteString(f)
+		w.WriteString(" ")
 
-		var worig io.Writer
+		var worig *bytes.Buffer
 
 		if c.opts.flat && m.Value.IsObject() {
-			w.Write([]byte(f))
+			w.WriteString(f)
 			worig = w
 			b := &bytes.Buffer{}
 			b.WriteString("type ")
@@ -166,18 +163,18 @@ func (c *converter) convertObject(obj *jsonast.JsonObject, w io.Writer) {
 			w = worig
 		}
 
-		w.Write([]byte(" `json:"))
+		w.WriteString(" `json:")
 		tag := m.Key
 		if c.opts.omitempty {
 			if _, ok := omittableKeys[m.Key]; ok {
 				tag += ",omitempty"
 			}
 		}
-		w.Write([]byte(strconv.Quote(tag)))
-		w.Write([]byte("`\n"))
+		w.WriteString(strconv.Quote(tag))
+		w.WriteString("`\n")
 	}
 
-	w.Write([]byte("}"))
+	w.WriteString("}")
 }
 
 func convertKey(key string) string {
