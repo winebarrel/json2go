@@ -50,8 +50,14 @@ func convert(parse func(string) (*jsonast.JsonValue, error), optfns ...OptFn) ([
 	}
 
 	c.convertAny(v, &buf)
-
 	var out bytes.Buffer
+
+	if options.rootType != "" {
+		out.WriteString("type ")
+		out.WriteString(options.rootType)
+		out.WriteString(" ")
+	}
+
 	for i, b := range c.bufs {
 		o, err := format.Source(b.Bytes())
 
@@ -59,11 +65,7 @@ func convert(parse func(string) (*jsonast.JsonValue, error), optfns ...OptFn) ([
 			return nil, fmt.Errorf("failed to format golang: %w", err)
 		}
 
-		if i == 0 {
-			if options.flat {
-				out.WriteString("type Root ")
-			}
-		} else {
+		if i > 0 {
 			out.WriteByte('\n')
 		}
 
