@@ -4,9 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
-	"plugin"
 	"reflect"
 	"strings"
 	"testing"
@@ -114,22 +112,4 @@ func TestConvertBytes_OK(t *testing.T) {
 			})
 		}
 	}
-}
-
-func compile(t *testing.T, src []byte) any {
-	t.Helper()
-	tmpdir := t.TempDir()
-	cwd, _ := os.Getwd()
-	defer os.Chdir(cwd)
-	os.Chdir(tmpdir)
-	data := fmt.Sprintf("package main\nvar A = *new(%s)", src)
-	os.WriteFile("a.go", []byte(data), 0400)
-	cmd := exec.Command("go", "build", "-buildmode=plugin", "-o", "a.so", "a.go")
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	err := cmd.Run()
-	require.NoError(t, err)
-	plug, _ := plugin.Open("a.so")
-	a, _ := plug.Lookup("A")
-	return a
 }
