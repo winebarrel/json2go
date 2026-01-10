@@ -52,9 +52,9 @@ func convert(parse func(string) (*jsonast.JsonValue, error), optfns ...OptFn) ([
 	c.convertAny(v, &buf)
 	var out bytes.Buffer
 
-	if options.rootType != "" {
+	if options.typeName != "" {
 		out.WriteString("type ")
-		out.WriteString(options.rootType)
+		out.WriteString(options.typeName)
 		out.WriteString(" ")
 	}
 

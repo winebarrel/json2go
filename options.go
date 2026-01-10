@@ -5,7 +5,7 @@ type options struct {
 	flat      bool
 	omitempty bool
 	pointer   bool
-	rootType  string
+	typeName  string
 }
 
 type OptFn func(*options)
@@ -34,8 +34,8 @@ func OptionPointer(pointer bool) OptFn {
 	}
 }
 
-func OptionRootType(rootType string) OptFn {
+func OptionTypeName(typeName string) OptFn {
 	return func(o *options) {
-		o.rootType = rootType
+		o.typeName = typeName
 	}
 }

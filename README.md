@@ -20,10 +20,17 @@ Arguments:
   [<file>]    JSON file. If not specified, read from stdin.
 
 Flags:
+Usage: json2go [<file>] [flags]
+
+Arguments:
+  [<file>]    JSON file. If not specified, read from stdin.
+
+Flags:
   -h, --help              Show help.
       --[no-]flat         Flattening structs.
       --[no-]omitempty    Add 'omitempty' to optional fields. (default: true)
       --[no-]pointer      Make nullable fields pointer types. (default: true)
+      --[no-]type-name    Define type name. (default: true)
       --version
 ```
 
