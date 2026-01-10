@@ -11,7 +11,7 @@ import (
 	"github.com/winebarrel/json2go/v2"
 )
 
-func TestLargeJson(t *testing.T) {
+func TestLargeJSON(t *testing.T) {
 	if !testAcc {
 		t.Skip()
 	}
