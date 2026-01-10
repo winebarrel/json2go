@@ -9,13 +9,13 @@ type options struct {
 }
 
 func newOptions(optfns []OptFn) *options {
-	options := &options{}
+	opts := &options{}
 
 	for _, f := range optfns {
-		f(options)
+		f(opts)
 	}
 
-	return options
+	return opts
 }
 
 type OptFn func(*options)
