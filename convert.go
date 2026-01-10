@@ -26,12 +26,7 @@ func Convert(r io.Reader, optfns ...OptFn) ([]byte, error) {
 }
 
 func convert(parse func(string) (*jsonast.JsonValue, error), optfns ...OptFn) ([]byte, error) {
-	options := &options{}
-
-	for _, f := range optfns {
-		f(options)
-	}
-
+	options := newOptions(optfns)
 	v, err := parse(options.filename)
 
 	if err != nil {

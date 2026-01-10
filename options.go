@@ -8,6 +8,16 @@ type options struct {
 	typeName  string
 }
 
+func newOptions(optfns []OptFn) *options {
+	options := &options{}
+
+	for _, f := range optfns {
+		f(options)
+	}
+
+	return options
+}
+
 type OptFn func(*options)
 
 func OptionFilename(filename string) OptFn {
