@@ -57,6 +57,7 @@ type testCase struct {
 	Flat        bool
 	NoOmitempty bool
 	NoPointer   bool
+	TypeName    string
 }
 
 func TestConvertBytes_OK(t *testing.T) {
@@ -92,13 +93,14 @@ func TestConvertBytes_OK(t *testing.T) {
 					json2go.OptionFlat(tt.Flat),
 					json2go.OptionOmitempty(!tt.NoOmitempty),
 					json2go.OptionPointer(!tt.NoPointer),
+					json2go.OptionTypeName(tt.TypeName),
 				}
 
 				out, err := json2go.ConvertBytes([]byte(tt.Input), optfns...)
 				require.NoError(t, err)
 				assert.Equal(t, tt.Expected, string(out))
 
-				if testAcc && tt.Unmarshal != "skip" && !tt.Flat {
+				if testAcc && tt.Unmarshal != "skip" && !tt.Flat && tt.TypeName == "" {
 					x := compile(t, out)
 					err := json.Unmarshal([]byte(tt.Input), x)
 					require.NoError(t, err)
