@@ -26,6 +26,7 @@ func TestLargeJSON(t *testing.T) {
 		t.Run(u, func(t *testing.T) {
 			resp, err := http.Get(u)
 			require.NoError(t, err)
+			require.Equal(t, http.StatusOK, resp.StatusCode)
 			t.Cleanup(func() {
 				if resp != nil && resp.Body != nil {
 					resp.Body.Close()
