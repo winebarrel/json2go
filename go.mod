@@ -3,7 +3,7 @@ module github.com/winebarrel/json2go/v2
 go 1.25.5
 
 require (
-	github.com/alecthomas/kong v1.15.0
+	github.com/alecthomas/kong v1.16.0
 	github.com/stretchr/testify v1.11.1
 	github.com/winebarrel/jsonast v0.8.0
 	go.yaml.in/yaml/v4 v4.0.0-rc.6
