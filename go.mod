@@ -6,7 +6,7 @@ require (
 	github.com/alecthomas/kong v1.17.0
 	github.com/stretchr/testify v1.12.1
 	github.com/winebarrel/jsonast v0.8.0
-	go.yaml.in/yaml/v4 v4.0.0-rc.8
+	go.yaml.in/yaml/v4 v4.0.0-rc.9
 )
 
 require (
